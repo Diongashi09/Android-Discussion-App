@@ -7,17 +7,29 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+<!--    <ImageView android:id="@+id/imageView" android:layout_width="wrap_content" android:layout_height="300dp" android:src="@drawable/firstimg.jpg" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="1.0" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" app:layout_constraintVertical_bias="0.071" />-->
+
+<!--    <ImageView-->
+<!--        android:id="@+id/imageView"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="300dp"-->
+<!--        app:srcCompat="@drawable/firstimg"-->
+<!--        tools:layout_editor_absoluteX="-1dp"-->
+<!--        tools:layout_editor_absoluteY="30dp" />-->
+
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="300dp"
-        android:src="@drawable/firstpic"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/firstimg"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.071" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintVertical_bias="0.1"
+        tools:layout_editor_absoluteX="-1dp"
+        tools:layout_editor_absoluteY="30dp" />
+
 
     <TextView
         android:id="@+id/textView2"
@@ -36,7 +48,7 @@
         android:id="@+id/textView"
         android:layout_width="410dp"
         android:layout_height="80dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="40dp"
         android:fontFamily="sans-serif-light"
         android:text="Connect, share, and discover ideas with a community that values open conversation. Dive into discussions on topics that matter to you, ask questions, and get insights from others. Ready to start a conversation? Let’s make your voice heard!"
         android:textAlignment="center"
@@ -50,7 +62,7 @@
         android:id="@+id/goLogin"
         android:layout_width="300dp"
         android:layout_height="50dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="52dp"
         android:fontFamily="sans-serif-medium"
         android:text="Login"
         android:textAllCaps="false"
@@ -72,5 +84,6 @@
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/goLogin" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

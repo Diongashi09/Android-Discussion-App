@@ -19,10 +19,11 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.android.material.textfield.TextInputEditText;
 
 public class LogInPage extends AppCompatActivity {
-    private TextInputEditText emailInpEditTxt;//EmailInputL
-    private TextInputEditText passwordInpEditTxt;//PasswordInputL
-    private Button btnLogIn;//btnLoginL
-    private TextView registerNowTextView;//txtGoRegister
+    private TextInputEditText emailInpEditTxt;
+    private TextInputEditText passwordInpEditTxt;
+    private Button btnLogIn;
+    private TextView registerNowTextView;
+    private dbConnect db;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -31,17 +32,15 @@ public class LogInPage extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_log_in_page);
 
+        db = new dbConnect(this); // Initialize database connection
         emailInpEditTxt = findViewById(R.id.EmailInputL);
         passwordInpEditTxt = findViewById(R.id.PasswordInputL);
         btnLogIn = findViewById(R.id.btnLoginL);
         registerNowTextView = findViewById(R.id.txtGoRegister);
 
-        registerNowTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(LogInPage.this, RegisterPage.class);
-                startActivity(i);
-            }
+        registerNowTextView.setOnClickListener(view -> {
+            Intent i = new Intent(LogInPage.this, RegisterPage.class);
+            startActivity(i);
         });
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -52,18 +51,31 @@ public class LogInPage extends AppCompatActivity {
 
         btnLogIn.setOnClickListener(view -> validateFields());
     }
-    private void validateFields(){
-        String email=emailInpEditTxt.getText().toString();
-        String password=passwordInpEditTxt.getText().toString();
 
-        if (TextUtils.isEmpty(email)){
-            Toast.makeText(this,"Please enter your email!",Toast.LENGTH_SHORT).show();
-        } else if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            Toast.makeText(this,"Please enter a valid email address!",Toast.LENGTH_SHORT).show();
-        }else if (TextUtils.isEmpty(password)) {
-            Toast.makeText(this,"Please enter your password!",Toast.LENGTH_SHORT).show();
-        }else {
-            Toast.makeText(this,"Success!",Toast.LENGTH_SHORT).show();
+    private void validateFields() {
+        String email = emailInpEditTxt.getText().toString();
+        String password = passwordInpEditTxt.getText().toString();
+
+        if (TextUtils.isEmpty(email)) {
+            Toast.makeText(this, "Please enter your email!", Toast.LENGTH_SHORT).show();
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            Toast.makeText(this, "Please enter a valid email address!", Toast.LENGTH_SHORT).show();
+        } else if (TextUtils.isEmpty(password)) {
+            Toast.makeText(this, "Please enter your password!", Toast.LENGTH_SHORT).show();
+        } else {
+            loginUser(email, password);
+        }
+    }
+
+    private void loginUser(String email, String password) {
+        if (db.loginUser(email, password)) {
+            Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show();
+            // Navigate to the main app activity
+            Intent intent = new Intent(LogInPage.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        } else {
+            Toast.makeText(this, "Invalid email or password!", Toast.LENGTH_SHORT).show();
         }
     }
 }
