@@ -1,3 +1,14 @@
 <resources>
-    <string name="app_name">DiscussFirst</string>
+    <string name="hint_last_name">Mbiemri</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_university">Universiteti</string>
+    <string name="hint_department">Departamenti</string>
+    <string name="hint_first_name">Ermri</string>
+    <string name="hint_username">Emri perdoruesit</string>
+    <string name="change_password">Ndrysho Fjalkalimin</string>
+    <string name="hint_old_password">Fjalkalimi vjeter</string>
+    <string name="hint_new_password">Fjalkalimi ri</string>
+    <string name="hint_confirm_password">Konfirmo fjalkalimin</string>
+    <string name="submit_change">Ndrysho Profilin</string>
+    <string name="app_name">UniConnect</string>
 </resources>
