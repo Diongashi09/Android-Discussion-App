@@ -17,6 +17,11 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.textfield.TextInputEditText;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.content.Intent;
+import android.widget.Toast;
+import androidx.annotation.Nullable;
 
 public class LogInPage extends AppCompatActivity {
     private TextInputEditText emailInpEditTxt;
@@ -31,7 +36,6 @@ public class LogInPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_log_in_page);
-
         db = new dbConnect(this); // Initialize database connection
         emailInpEditTxt = findViewById(R.id.EmailInputL);
         passwordInpEditTxt = findViewById(R.id.PasswordInputL);
@@ -67,8 +71,9 @@ public class LogInPage extends AppCompatActivity {
         }
     }
 
+
     private void loginUser(String email, String password) {
-        if (db.loginUser(email, password)) {
+        /*if (db.loginUser(email, password)) {
             Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show();
             // Navigate to the main app activity
             Intent intent = new Intent(LogInPage.this, MainActivity.class);
@@ -76,6 +81,7 @@ public class LogInPage extends AppCompatActivity {
             finish();
         } else {
             Toast.makeText(this, "Invalid email or password!", Toast.LENGTH_SHORT).show();
-        }
+        }*/
     }
+
 }

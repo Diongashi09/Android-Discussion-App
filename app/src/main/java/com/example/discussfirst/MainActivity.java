@@ -1,6 +1,7 @@
 package com.example.discussfirst;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -32,8 +33,10 @@ public class MainActivity extends AppCompatActivity {
                 Intent i = new Intent(MainActivity.this, LogInPage.class);
                 startActivity(i);
             }
-        });
-
+    });
+        dbConnect dbHelper = new dbConnect(this);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        dbHelper.insertTestData();
         btnGoToRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -47,5 +50,6 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
     }
 }
