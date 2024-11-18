@@ -219,13 +219,75 @@ public class dbConnect extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + ARTICLE_REPOST_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS " + ARTICLE_LIKES_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS " + ARTICLE_COMMENTS_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS " + ARTICLE_TAGS_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS " + ARTICLE_IMAGES_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS " + ARTICLES_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS " + USERS_TABLE);
+        db.execSQL("ALTER TABLE " + USERS_TABLE + " RENAME TO temp_" + USERS_TABLE + ";");
+        db.execSQL("ALTER TABLE " + UNIVERSITY_TABLE + " RENAME TO temp_" + UNIVERSITY_TABLE + ";");
+        db.execSQL("ALTER TABLE " + DEPARTAMENT_TABLE + " RENAME TO temp_" + DEPARTAMENT_TABLE + ";");
+        db.execSQL("ALTER TABLE " + ARTICLES_TABLE + " RENAME TO temp_" + ARTICLES_TABLE + ";");
+        db.execSQL("ALTER TABLE " + ARTICLE_IMAGES_TABLE + " RENAME TO temp_" + ARTICLE_IMAGES_TABLE + ";");
+        db.execSQL("ALTER TABLE " + ARTICLE_TAGS_TABLE + " RENAME TO temp_" + ARTICLE_TAGS_TABLE + ";");
+        db.execSQL("ALTER TABLE " + ARTICLE_COMMENTS_TABLE + " RENAME TO temp_" + ARTICLE_COMMENTS_TABLE + ";");
+        db.execSQL("ALTER TABLE " + ARTICLE_REPOST_TABLE + " RENAME TO temp_" + ARTICLE_REPOST_TABLE + ";");
+        db.execSQL("ALTER TABLE " + ARTICLE_LIKES_TABLE + " RENAME TO temp_" + ARTICLE_LIKES_TABLE + ";");
+
         onCreate(db);
+
+        migrateData(db);
+
+        db.execSQL("DROP TABLE IF EXISTS temp_" + USERS_TABLE + ";");
+        db.execSQL("DROP TABLE IF EXISTS temp_" + UNIVERSITY_TABLE + ";");
+        db.execSQL("DROP TABLE IF EXISTS temp_" + DEPARTAMENT_TABLE + ";");
+        db.execSQL("DROP TABLE IF EXISTS temp_" + ARTICLES_TABLE + ";");
+        db.execSQL("DROP TABLE IF EXISTS temp_" + ARTICLE_IMAGES_TABLE + ";");
+        db.execSQL("DROP TABLE IF EXISTS temp_" + ARTICLE_TAGS_TABLE + ";");
+        db.execSQL("DROP TABLE IF EXISTS temp_" + ARTICLE_COMMENTS_TABLE + ";");
+        db.execSQL("DROP TABLE IF EXISTS temp_" + ARTICLE_REPOST_TABLE + ";");
+        db.execSQL("DROP TABLE IF EXISTS temp_" + ARTICLE_LIKES_TABLE + ";");
     }
+
+    private void migrateData(SQLiteDatabase db) {
+        db.execSQL("INSERT INTO " + USERS_TABLE + " ("
+                + USER_ID + ", "
+                + FIRSTNAME + ", "
+                + LASTNAME + ", "
+                + PASSWORD + ", "
+                + EMAIL + ", "
+                + ROLE + ", "
+                + DEPARTAMENTID + ", "
+                + UID + ", "
+                + PHONE_NUMBER + ", "
+                + GENDER + ", "
+                + PROFILE_IMAGE + ", "
+                + ISBLOCKED + ") "
+                + "SELECT "
+                + USER_ID + ", "
+                + FIRSTNAME + ", "
+                + LASTNAME + ", "
+                + PASSWORD + ", "
+                + EMAIL + ", "
+                + ROLE + ", "
+                + DEPARTAMENTID + ", "
+                + UID + ", "
+                + PHONE_NUMBER + ", "
+                + GENDER + ", "
+                + PROFILE_IMAGE + ", "
+                + ISBLOCKED + " FROM temp_" + USERS_TABLE + ";");
+
+        db.execSQL("INSERT INTO " + UNIVERSITY_TABLE + " ("
+                + UID + ", "
+                + UNAME + ") "
+                + "SELECT "
+                + UID + ", "
+                + UNAME + " FROM temp_" + UNIVERSITY_TABLE + ";");
+
+        db.execSQL("INSERT INTO " + DEPARTAMENT_TABLE + " ("
+                + DEPARTAMENTID + ", "
+                + DEPARTAMENTNAME + ", "
+                + UID + ") "
+                + "SELECT "
+                + DEPARTAMENTID + ", "
+                + DEPARTAMENTNAME + ", "
+                + UID + " FROM temp_" + DEPARTAMENT_TABLE + ";");
+
+    }
+
 }
