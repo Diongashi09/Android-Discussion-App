@@ -55,10 +55,18 @@ public class RegisterPage extends AppCompatActivity {
 
     private void validateFields() {
         String username = usernameInpEditTxt.getText().toString();
+        String firstName="test" ;
+        String lastName="test" ;
+        String phoneNumber = "044-555-555";
+        String gender = "Male";
+
         String email = emailInpEditTxt.getText().toString();
         String password = passwordInpEditTxt.getText().toString();
         String confirmPassword = confirmPasswordInpEditTxt.getText().toString();
-
+        int departmentId =1;
+        int universityId = 1;
+        String profileImage = "test";
+        boolean isBlocked = false;
         if (TextUtils.isEmpty(username)) {
             Toast.makeText(this, "Please enter your username!", Toast.LENGTH_SHORT).show();
         } else if (TextUtils.isEmpty(email)) {
@@ -72,12 +80,12 @@ public class RegisterPage extends AppCompatActivity {
         } else if (!password.equals(confirmPassword)) {
             Toast.makeText(this, "Passwords do not match!", Toast.LENGTH_SHORT).show();
         } else {
-            registerUser(username, email, password);
+            registerUser(firstName, lastName, email, password, phoneNumber, gender, departmentId, universityId, profileImage, isBlocked);
         }
     }
 
-    private void registerUser(String username, String email, String password) {
-        if (db.registerUser(username, email, password)) {
+    private void registerUser(String firstName, String lastName, String email, String password, String phoneNumber, String gender, int departmentId, int universityId, String profileImage, boolean isBlocked) {
+        if (db.registerUser(firstName, lastName, email, password, phoneNumber, gender, departmentId, universityId, profileImage, isBlocked)) {
             Toast.makeText(this, "Registration successful!", Toast.LENGTH_SHORT).show();
             // Navigate to login page
             Intent intent = new Intent(RegisterPage.this, LogInPage.class);
@@ -87,4 +95,5 @@ public class RegisterPage extends AppCompatActivity {
             Toast.makeText(this, "Registration failed. Email may already be in use.", Toast.LENGTH_SHORT).show();
         }
     }
+
 }
