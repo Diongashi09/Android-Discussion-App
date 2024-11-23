@@ -1,5 +1,4 @@
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -7,26 +6,26 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-<!--    <ImageView android:id="@+id/imageView" android:layout_width="wrap_content" android:layout_height="300dp" android:src="@drawable/firstimg.jpg" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="1.0" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" app:layout_constraintVertical_bias="0.071" />-->
+    <!--    <ImageView android:id="@+id/imageView" android:layout_width="wrap_content" android:layout_height="300dp" android:src="@drawable/firstimg.jpg" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="1.0" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" app:layout_constraintVertical_bias="0.071" />-->
 
-<!--    <ImageView-->
-<!--        android:id="@+id/imageView"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="300dp"-->
-<!--        app:srcCompat="@drawable/firstimg"-->
-<!--        tools:layout_editor_absoluteX="-1dp"-->
-<!--        tools:layout_editor_absoluteY="30dp" />-->
+    <!--    <ImageView-->
+    <!--        android:id="@+id/imageView"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="300dp"-->
+    <!--        app:srcCompat="@drawable/firstimg"-->
+    <!--        tools:layout_editor_absoluteX="-1dp"-->
+    <!--        tools:layout_editor_absoluteY="30dp" />-->
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="300dp"
-        app:srcCompat="@drawable/firstimg"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.1"
+        app:srcCompat="@drawable/firstimg"
         tools:layout_editor_absoluteX="-1dp"
         tools:layout_editor_absoluteY="30dp" />
 
@@ -35,12 +34,13 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="8dp"
         android:fontFamily="sans-serif-medium"
         android:text="Welcome"
         android:textSize="28sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/imageView" />
 
@@ -62,7 +62,7 @@
         android:id="@+id/goLogin"
         android:layout_width="300dp"
         android:layout_height="50dp"
-        android:layout_marginTop="52dp"
+        android:layout_marginTop="20dp"
         android:fontFamily="sans-serif-medium"
         android:text="Login"
         android:textAllCaps="false"

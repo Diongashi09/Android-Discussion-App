@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 public class dbConnect extends SQLiteOpenHelper {
@@ -70,7 +71,7 @@ public class dbConnect extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onCreate(SQLiteDatabase db) {
+    public void onCreate(@NonNull SQLiteDatabase db) {
         // Enable foreign keys
         db.execSQL("PRAGMA foreign_keys=ON;");
 
@@ -183,6 +184,7 @@ public class dbConnect extends SQLiteOpenHelper {
 
         ContentValues values = new ContentValues();
 
+
         // Insert test data for User 1
         values.put(FIRSTNAME, "John");
         values.put(LASTNAME, "Doe");
@@ -211,21 +213,64 @@ public class dbConnect extends SQLiteOpenHelper {
         values.put(PROFILE_IMAGE, "default_image_url");
         values.put(ISBLOCKED, false); // User is not blocked
         db.insert(USERS_TABLE, null, values);
+        values.clear();
 
-        // Close the database after inserting
-        db.close();
+        values.put(UID, 1);
+        values.put(UNAME, "Universiteti i Prishtinës");
+        db.insert(UNIVERSITY_TABLE,null, values);
+        values.put(UID, 1);
+        values.clear();
+
+        values.put(UNAME, "Universiteti Kadri Zeka");
+        values.put(UID, 2);
+        db.insert(UNIVERSITY_TABLE,null, values);
+        values.clear();
+
+        values.put(DEPARTAMENTNAME, "Inxhinieri Kompjuterike dhe Softuerike");
+        values.put(DEPARTAMENTID, 1);
+        values.put(UID, 1);
+        values.clear();
+
+        values.put(DEPARTAMENTNAME, "Elektroenergjetikë");
+        values.put(DEPARTAMENTID, 2);
+        values.put(UID, 1);
+        values.clear();
+
+        values.put(DEPARTAMENTNAME, "Elektronik, Automatik Robotik");
+        values.put(DEPARTAMENTID, 3);
+        values.put(UID, 1);
+        values.clear();
+
+        db.insert(DEPARTAMENT_TABLE,null, values);
+        values.clear();
+
+
     }
+    public boolean checkUser(String email, String password) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM Users WHERE email = ? AND password = ?", new String[]{email, password});
 
+        boolean exists = cursor.getCount() > 0; // Check if at least one record exists
+        cursor.close();
+        db.close();
+
+        return exists;
+    }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + ARTICLE_REPOST_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS " + ARTICLE_LIKES_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS " + ARTICLE_COMMENTS_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS " + ARTICLE_TAGS_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS " + ARTICLE_IMAGES_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS " + ARTICLES_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS " + USERS_TABLE);
+        // Backup existing data
+        db.execSQL("ALTER TABLE " + USERS_TABLE + " RENAME TO temp_Users");
+
+        // Recreate tables with the updated schema
         onCreate(db);
+
+        // Restore data into the new tables
+        db.execSQL("INSERT INTO " + USERS_TABLE + " (firstname, lastname, email, password, phone_number, gender, departamentid, uid, profile_image, isblocked) " +
+                "SELECT firstname, lastname, email, password, phone_number, gender, departamentid, uid, profile_image, isblocked FROM temp_Users");
+
+        // Drop the temporary table
+        db.execSQL("DROP TABLE IF EXISTS temp_Users");
     }
+
 }
