@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "428270004056",
+    "project_id": "otp-verification-16add",
+    "storage_bucket": "otp-verification-16add.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:428270004056:android:2c49698f211ba2caba672d",
+        "android_client_info": {
+          "package_name": "com.example.discussfirst"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCLEFEgcuhvsKZzUJdcRt3emSTQNDc5GPo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

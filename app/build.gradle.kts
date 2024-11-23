@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
+    id("com.google.gms.google-services") // Google Services plugin
 }
 
 android {
@@ -25,14 +26,22 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
+    // Add packaging options to resolve conflicts
+    packagingOptions {
+        exclude ("META-INF/NOTICE.md")
+        exclude ("META-INF/LICENSE.md")
+
+    }
 }
 
 dependencies {
-
+    // Android dependencies
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
@@ -40,5 +49,4 @@ dependencies {
     testImplementation(libs.junit)
 
     androidTestImplementation(libs.ext.junit)
-   androidTestImplementation(libs.espresso.core)
-}
+
