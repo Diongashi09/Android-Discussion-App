@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
+    id("com.google.gms.google-services") // Google Services plugin
 }
 
 android {
@@ -25,14 +26,22 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
+    // Add packaging options to resolve conflicts
+    packagingOptions {
+        exclude ("META-INF/NOTICE.md")
+        exclude ("META-INF/LICENSE.md")
+
+    }
 }
 
 dependencies {
-
+    // Android dependencies
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
@@ -40,4 +49,13 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    implementation("com.sun.mail:android-mail:1.6.6")
+    implementation("com.sun.mail:android-activation:1.6.6")
+
+    // Firebase dependencies
+    implementation(platform("com.google.firebase:firebase-bom:33.6.0")) // Firebase BoM
+    implementation("com.google.firebase:firebase-auth") // Firebase Authentication
 }
+
+// Apply the Google Services plugin
+apply(plugin = "com.google.gms.google-services")
