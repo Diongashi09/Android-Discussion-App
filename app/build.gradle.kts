@@ -47,6 +47,15 @@ dependencies {
     implementation(libs.activity)
     implementation(libs.constraintlayout)
     testImplementation(libs.junit)
-
     androidTestImplementation(libs.ext.junit)
+    androidTestImplementation(libs.espresso.core)
+    implementation("com.sun.mail:android-mail:1.6.6") //per email me dergu
+    implementation("com.sun.mail:android-activation:1.6.6")
 
+    // Firebase dependencies
+    implementation(platform("com.google.firebase:firebase-bom:33.6.0")) // Firebase BoM
+    implementation("com.google.firebase:firebase-auth") // Firebase Authentication
+}
+
+// Apply the Google Services plugin
+apply(plugin = "com.google.gms.google-services")

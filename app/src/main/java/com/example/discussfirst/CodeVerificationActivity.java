@@ -49,5 +49,5 @@ public class CodeVerificationActivity extends AppCompatActivity {
                 Toast.makeText(CodeVerificationActivity.this, "Kodi i pasaktë i verifikimit", Toast.LENGTH_SHORT).show();
             }
         });
-    }
+    }//Testi
 }
