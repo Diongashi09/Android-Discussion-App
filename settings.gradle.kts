@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "DiscussFirst"
+rootProject.name = "UniConnect"
 include(":app")
  
