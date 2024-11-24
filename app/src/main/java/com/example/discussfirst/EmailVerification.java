@@ -91,5 +91,5 @@ public class EmailVerification extends AppCompatActivity {
                 });
             }
         }).start();
-    }
+    }//test
 }
