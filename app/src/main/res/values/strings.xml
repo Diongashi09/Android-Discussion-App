@@ -11,4 +11,9 @@
     <string name="hint_confirm_password">Konfirmo fjalkalimin</string>
     <string name="submit_change">Ndrysho Profilin</string>
     <string name="app_name">UniConnect</string>
+    <string-array name="gender_options">
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
+
 </resources>

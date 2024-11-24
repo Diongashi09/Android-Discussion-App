@@ -6,15 +6,19 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 public class dbConnect extends SQLiteOpenHelper {
+
+    // Database Name and Version
     private static final String dbName = "UniConnectDB.db";
     private static final int dbVersion = 1;
 
+    // Table names
     private static final String USERS_TABLE = "User";
-    private  static  final String UNIVERSITY_TABLE = "University";
-    private  static  final String DEPARTAMENT_TABLE = "Departament";
+    private static final String UNIVERSITY_TABLE = "University";
+    private static final String DEPARTAMENT_TABLE = "Departament";
     private static final String ARTICLES_TABLE = "Article";
     private static final String ARTICLE_REPOST_TABLE = "Article_Repost_Table";
     private static final String ARTICLE_IMAGES_TABLE = "Article_Image";
@@ -22,31 +26,29 @@ public class dbConnect extends SQLiteOpenHelper {
     private static final String ARTICLE_COMMENTS_TABLE = "Article_Comment";
     private static final String ARTICLE_LIKES_TABLE = "Article_Like";
 
-    // Tabela per user
-
+    // User table column names
     private static final String ID = "id";
     private static final String USER_ID = "userId";
     private static final String USERNAME = "userName";
     private static final String FIRSTNAME = "firstName";
     private static final String LASTNAME = "lastName";
-    private static final String GENDER ="gender";
+    private static final String GENDER = "gender";
     private static final String PROFILE_IMAGE = "image";
     private static final String ISBLOCKED = "isBlocked";
-    private static final String PHONE_NUMBER ="phoneNumber";
-
+    private static final String PHONE_NUMBER = "phoneNumber";
     private static final String PASSWORD = "password";
     private static final String EMAIL = "email";
     private static final String ROLE = "role";
-    //////////////////////////////////////////
-    //Tabela per universitet
-    private static String UID = "universityId";
-    private static String UNAME ="universityname";
-    // Tabela per departament
-    private static String DEPARTAMENTID = "departmentId";
 
-    private static String DEPARTAMENTNAME = "departmentname";
-/////////////////////////////////////////////
-    // Tabela Artikuj
+    // University table column names
+    private static final String UID = "universityId";
+    private static final String UNAME = "universityname";
+
+    // Department table column names
+    private static final String DEPARTAMENTID = "departmentId";
+    private static final String DEPARTAMENTNAME = "departmentname";
+
+    // Article table column names
     private static final String ARTICLE_USER_ID = "userId";
     private static final String ARTICLE_CONTENT = "content";
     private static final String ARTICLE_CREATED_AT = "createdAt";
@@ -56,21 +58,33 @@ public class dbConnect extends SQLiteOpenHelper {
     private static final String ARTICLE_ID = "articleId";
 
     private static final String TAG = "tag";
-
     private static final String USER_ID_FK = "userId";
     private static final String CREATED_AT = "createdAt";
     private static final String PARENT_ID = "parentId";
 
-  /// //////////////////////////////////////////////////////
-    // Tabela per Article_Like
+    // Article Like table column names
     private static final String CREATED_AT_LIKE = "createdAt";
 
-    public dbConnect(@Nullable Context context) {
+    // Singleton instance
+    private static dbConnect instance;
+
+    // Private constructor to prevent direct instantiation
+    private dbConnect(@Nullable Context context) {
         super(context, dbName, null, dbVersion);
     }
 
+    // Get the Singleton instance of dbConnect
+    public static synchronized dbConnect getInstance(Context context) {
+        if (instance == null) {
+            instance = new dbConnect(context.getApplicationContext());
+        }
+        return instance;
+    }
+
+
+
     @Override
-    public void onCreate(SQLiteDatabase db) {
+    public void onCreate(@NonNull SQLiteDatabase db) {
         // Enable foreign keys
         db.execSQL("PRAGMA foreign_keys=ON;");
 
@@ -183,6 +197,7 @@ public class dbConnect extends SQLiteOpenHelper {
 
         ContentValues values = new ContentValues();
 
+
         // Insert test data for User 1
         values.put(FIRSTNAME, "John");
         values.put(LASTNAME, "Doe");
@@ -211,21 +226,59 @@ public class dbConnect extends SQLiteOpenHelper {
         values.put(PROFILE_IMAGE, "default_image_url");
         values.put(ISBLOCKED, false); // User is not blocked
         db.insert(USERS_TABLE, null, values);
+        values.clear();
 
-        // Close the database after inserting
-        db.close();
+        values.put(UID, 1);
+        values.put(UNAME, "Universiteti i Prishtinës");
+        db.insert(UNIVERSITY_TABLE,null, values);
+        values.clear();
+
+        values.put(UNAME, "Universiteti Kadri Zeka");
+        values.put(UID, 2);
+        db.insert(UNIVERSITY_TABLE,null, values);
+        values.clear();
+
+        values.put(DEPARTAMENTID, 1);
+        values.put(DEPARTAMENTNAME, "Inxhinieri Kompjuterike dhe Softuerike");
+        values.put(UID, 1);
+        db.insert(DEPARTAMENT_TABLE,null, values);
+        values.clear();
+
+        values.put(DEPARTAMENTID, 2);
+        values.put(DEPARTAMENTNAME, "Elektroenergjetikë");
+        values.put(UID, 1);
+        db.insert(DEPARTAMENT_TABLE,null, values);
+        values.clear();
+
+        values.put(DEPARTAMENTNAME, "Elektronik, Automatik Robotik");
+        values.put(DEPARTAMENTID, 3);
+        values.put(UID, 1);
+        db.insert(DEPARTAMENT_TABLE,null, values);
+        values.clear();
+
+
     }
+    public boolean checkUser(String email, String password) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM User WHERE email = ? AND password = ?", new String[]{email, password});
 
+        boolean exists = cursor.getCount() > 0;
+        cursor.close();
+        db.close();
+
+        return exists;
+    }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + ARTICLE_REPOST_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS " + ARTICLE_LIKES_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS " + ARTICLE_COMMENTS_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS " + ARTICLE_TAGS_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS " + ARTICLE_IMAGES_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS " + ARTICLES_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS " + USERS_TABLE);
+        db.execSQL("ALTER TABLE " + USERS_TABLE + " RENAME TO temp_Users");
+
         onCreate(db);
+
+        db.execSQL("INSERT INTO " + USERS_TABLE + " (firstname, lastname, email, password, phone_number, gender, departamentid, uid, profile_image, isblocked) " +
+                "SELECT firstname, lastname, email, password, phone_number, gender, departamentid, uid, profile_image, isblocked FROM temp_Users");
+
+     //   db.execSQL("DROP TABLE IF EXISTS temp_Users");
     }
+
 }
