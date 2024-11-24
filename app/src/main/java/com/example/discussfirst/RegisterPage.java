@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Patterns;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,42 +19,42 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.android.material.textfield.TextInputEditText;
 public class RegisterPage extends AppCompatActivity {
     private TextInputEditText firstNameInpEditTxt, lastNameInpEditTxt, emailInpEditTxt, passwordInpEditTxt, confirmPasswordInpEditTxt, phoneNumberInpEditTxt;
+    private Spinner gender;
     private Button btnRegister;
     private dbConnect db;
+    private static final String PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[A-Za-z]).{8,}$";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register_page); // Ensure this layout file matches the provided XML
+        setContentView(R.layout.activity_register_page);
 
-        // Initialize database connection
-        db = new dbConnect(RegisterPage.this);
+        db =  dbConnect.getInstance(this);
 
-        // Initialize UI components
+
         firstNameInpEditTxt = findViewById(R.id.firstNameInput);
         lastNameInpEditTxt = findViewById(R.id.lastNameInput);
         emailInpEditTxt = findViewById(R.id.emailInput);
         passwordInpEditTxt = findViewById(R.id.passwordInput);
         confirmPasswordInpEditTxt = findViewById(R.id.confirmPasswordInput);
         phoneNumberInpEditTxt = findViewById(R.id.phoneNumberInput);
+        gender =findViewById(R.id.genderSpinner)  ;
         btnRegister = findViewById(R.id.btnRegister);
 
-        // Register button listener
         btnRegister.setOnClickListener(view -> validateFields());
     }
 
     private void validateFields() {
-        // Extract values from input fields
         String firstName = firstNameInpEditTxt.getText().toString().trim();
         String lastName = lastNameInpEditTxt.getText().toString().trim();
         String email = emailInpEditTxt.getText().toString().trim();
         String password = passwordInpEditTxt.getText().toString();
         String confirmPassword = confirmPasswordInpEditTxt.getText().toString();
         String phoneNumber = phoneNumberInpEditTxt.getText().toString().trim();
-        String gender = "male";
-        int departmentId = 1; // Set default or dynamic value
-        int universityId = 1; // Set default or dynamic value
-        String profileImage = "default_profile.jpg"; // Placeholder value
+        String gender = this.gender.getSelectedItem().toString();
+        int departmentId = 1;
+        int universityId = 1;
+        String profileImage = "default_profile.jpg";
         boolean isBlocked = false;
 
         // Validate inputs
@@ -76,6 +78,10 @@ public class RegisterPage extends AppCompatActivity {
             Toast.makeText(this, "Please enter your password!", Toast.LENGTH_SHORT).show();
             return;
         }
+        if (!password.matches(PASSWORD_PATTERN)) {
+            Toast.makeText(this, "Password must be at least 8 characters long, contain at least 1 number, 1 special character, and 1 letter!", Toast.LENGTH_LONG).show();
+            return;
+        }
         if (TextUtils.isEmpty(confirmPassword)) {
             Toast.makeText(this, "Please confirm your password!", Toast.LENGTH_SHORT).show();
             return;
@@ -88,16 +94,14 @@ public class RegisterPage extends AppCompatActivity {
             Toast.makeText(this, "Please enter your phone number!", Toast.LENGTH_SHORT).show();
             return;
         }
+        String encryptedPassword = Encryption.encrypt(password);
 
-        // Register user
-        registerUser(firstName, lastName, email, password, phoneNumber, gender, departmentId, universityId, profileImage, isBlocked);
+        registerUser(firstName, lastName, email, encryptedPassword, phoneNumber, gender, departmentId, universityId, profileImage, isBlocked);
     }
 
     private void registerUser(String firstName, String lastName, String email, String password, String phoneNumber, String gender, int departmentId, int universityId, String profileImage, boolean isBlocked) {
-        // Call the database function to register the user
         if (db.registerUser(firstName, lastName, email, password, phoneNumber, gender, departmentId, universityId, profileImage, isBlocked)) {
             Toast.makeText(this, "Registration successful!", Toast.LENGTH_SHORT).show();
-            // Navigate to login page
             Intent intent = new Intent(RegisterPage.this, LogInPage.class);
             startActivity(intent);
             finish();

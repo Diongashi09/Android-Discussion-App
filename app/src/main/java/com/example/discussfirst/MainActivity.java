@@ -34,7 +34,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i);
             }
     });
-        dbConnect dbHelper = new dbConnect(this);
+        dbConnect dbHelper  = dbConnect.getInstance(this);
+        ;
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         dbHelper.insertTestData();
         btnGoToRegister.setOnClickListener(new View.OnClickListener() {
