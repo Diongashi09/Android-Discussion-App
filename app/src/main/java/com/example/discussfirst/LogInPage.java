@@ -71,8 +71,11 @@ public class LogInPage extends AppCompatActivity {
     private void loginUser(String email, String password) {
         try {
         boolean userExists = db.checkUser(email, password);
+            Intent i = new Intent(LogInPage.this, EmailVerification.class);
+            startActivity(i);
 
-        if (userExists) {
+
+            if (userExists) {
             new AlertDialog.Builder(this)
                     .setTitle("Success")
                     .setMessage("Login successful!")
@@ -81,7 +84,7 @@ public class LogInPage extends AppCompatActivity {
                     })
                     .setCancelable(false)
                     .show();
-
+                db.close();
         } else {
             new AlertDialog.Builder(this)
                     .setTitle("Error")

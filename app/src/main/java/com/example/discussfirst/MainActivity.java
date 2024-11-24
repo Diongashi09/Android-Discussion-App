@@ -12,6 +12,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.io.File;
+
 public class MainActivity extends AppCompatActivity {
 
     Button btnGoToLogin;
@@ -30,14 +32,22 @@ public class MainActivity extends AppCompatActivity {
         btnGoToLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(MainActivity.this, EmailVerification.class);
+                Intent i = new Intent(MainActivity.this, LogInPage.class);
                 startActivity(i);
             }
     });
         dbConnect dbHelper  = dbConnect.getInstance(this);
-        ;
+
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         dbHelper.insertTestData();
+        File backupFile = new File(getExternalFilesDir(null), "Backup/UniConnectDB.db");
+        if (backupFile.exists()) {
+            dbHelper.restoreDatabase(this);
+            System.out.println("Database restored from backup.");
+        } else {
+            dbHelper.backupDatabase(this);
+            System.out.println("Initial backup completed.");
+        }
         btnGoToRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
