@@ -63,7 +63,8 @@ public class LogInPage extends AppCompatActivity {
     private void validateFields() {
         String email = emailInpEditTxt.getText().toString();
         String password = passwordInpEditTxt.getText().toString();
-            loginUser(email, password);
+        String encryptedPassword = Encryption.encrypt(password);
+            loginUser(email, encryptedPassword);
 
     }
 
