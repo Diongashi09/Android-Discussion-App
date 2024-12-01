@@ -1,17 +1,24 @@
 package com.example.discussfirst;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.List;
 
 public class ProfilePage extends AppCompatActivity {
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,6 +30,15 @@ public class ProfilePage extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        int userId = getIntent().getIntExtra("USER_ID",-1);
+        dbConnect dbHelper = new dbConnect(this);
+        List<Article> articles = dbHelper.getUserArticles(userId);
+
+        ArticleAdapter adapter = new ArticleAdapter(articles);
+        recyclerView.setAdapter(adapter);
     }
 
     // Navigate to ResetPassword Activity
