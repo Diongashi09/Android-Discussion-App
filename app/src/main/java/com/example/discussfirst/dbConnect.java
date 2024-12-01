@@ -83,7 +83,21 @@ public class dbConnect extends SQLiteOpenHelper {
         return instance;
     }
 
-
+    public static String getUniversityTableName() {
+        return UNIVERSITY_TABLE;
+    }
+    public static String getDepartamentTable() {
+        return DEPARTAMENT_TABLE;
+    }
+    public static String getUniversityID() {
+        return UID;
+    }
+    public static String getUniversityName() {
+        return UNAME;
+    }
+    public static String getDepartamentID() {
+        return DEPARTAMENTID;
+    }
 
     @Override
     public void onCreate(@NonNull SQLiteDatabase db) {
@@ -92,7 +106,7 @@ public class dbConnect extends SQLiteOpenHelper {
 
         String createUserTable = "CREATE TABLE IF NOT EXISTS " + USERS_TABLE + " ("
                 + USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + FIRSTNAME + " TEXT NOT NULL UNIQUE, "
+                + FIRSTNAME + " TEXT NOT NULL , "
                 + LASTNAME + " TEXT NOT NULL, "
                 + PASSWORD + " TEXT NOT NULL, "
                 + EMAIL + " TEXT UNIQUE, "
@@ -326,6 +340,7 @@ public class dbConnect extends SQLiteOpenHelper {
             System.err.println("Restore failed: " + e.getMessage());
         }
     }
+
 
     public List<Article> getUserArticles(int userId) {
         List<Article> articles = new ArrayList<>();
