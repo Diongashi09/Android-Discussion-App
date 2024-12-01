@@ -12,6 +12,8 @@ import androidx.annotation.Nullable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class dbConnect extends SQLiteOpenHelper {
 
@@ -52,6 +54,7 @@ public class dbConnect extends SQLiteOpenHelper {
 
     // Article table column names
     private static final String ARTICLE_USER_ID = "userId";
+    private static final String ARTICLE_TITLE = "title";
     private static final String ARTICLE_CONTENT = "content";
     private static final String ARTICLE_CREATED_AT = "createdAt";
     private static final String ARTICLE_CATEGORY = "category";
@@ -68,7 +71,7 @@ public class dbConnect extends SQLiteOpenHelper {
 
     private static dbConnect instance;
 
-    private dbConnect(@Nullable Context context) {
+    protected dbConnect(@Nullable Context context) {
         super(context, dbName, null, dbVersion);
     }
 
@@ -136,6 +139,7 @@ public class dbConnect extends SQLiteOpenHelper {
         String createArticleTable = "CREATE TABLE IF NOT EXISTS " + ARTICLES_TABLE + " ("
                 + ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + ARTICLE_USER_ID + " INTEGER NOT NULL, "
+                + ARTICLE_TITLE + " TEXT NOT NULL, "
                 + ARTICLE_CONTENT + " TEXT NOT NULL, "
                 + ARTICLE_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP, "
                 + ARTICLE_CATEGORY + " TEXT NOT NULL, "
@@ -337,5 +341,28 @@ public class dbConnect extends SQLiteOpenHelper {
         }
     }
 
+
+    public List<Article> getUserArticles(int userId) {
+        List<Article> articles = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM " + ARTICLES_TABLE + " WHERE " + ARTICLE_USER_ID + " = ?", new String[]{String.valueOf(userId)});
+
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(cursor.getColumnIndex(ID));
+                String title = cursor.getString(cursor.getColumnIndex(ARTICLE_TITLE));
+                String content = cursor.getString(cursor.getColumnIndex(ARTICLE_CONTENT));
+                String category = cursor.getString(cursor.getColumnIndex(ARTICLE_CATEGORY));
+                String createdAt = cursor.getString(cursor.getColumnIndex(ARTICLE_CREATED_AT));
+
+//                articles.add(new Article(id, userId, title, content, category, createdAt));
+                articles.add(new Article(id,userId,title,content,category,createdAt));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return articles;
+    }
 
 }
