@@ -12,6 +12,8 @@ import androidx.annotation.Nullable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class dbConnect extends SQLiteOpenHelper {
 
@@ -52,6 +54,7 @@ public class dbConnect extends SQLiteOpenHelper {
 
     // Article table column names
     private static final String ARTICLE_USER_ID = "userId";
+    private static final String ARTICLE_TITLE = "title";
     private static final String ARTICLE_CONTENT = "content";
     private static final String ARTICLE_CREATED_AT = "createdAt";
     private static final String ARTICLE_CATEGORY = "category";
@@ -68,7 +71,7 @@ public class dbConnect extends SQLiteOpenHelper {
 
     private static dbConnect instance;
 
-    private dbConnect(@Nullable Context context) {
+    protected dbConnect(@Nullable Context context) {
         super(context, dbName, null, dbVersion);
     }
 
@@ -80,7 +83,21 @@ public class dbConnect extends SQLiteOpenHelper {
         return instance;
     }
 
-
+    public static String getUniversityTableName() {
+        return UNIVERSITY_TABLE;
+    }
+    public static String getDepartamentTable() {
+        return DEPARTAMENT_TABLE;
+    }
+    public static String getUniversityID() {
+        return UID;
+    }
+    public static String getUniversityName() {
+        return UNAME;
+    }
+    public static String getDepartamentID() {
+        return DEPARTAMENTID;
+    }
 
     @Override
     public void onCreate(@NonNull SQLiteDatabase db) {
@@ -89,7 +106,7 @@ public class dbConnect extends SQLiteOpenHelper {
 
         String createUserTable = "CREATE TABLE IF NOT EXISTS " + USERS_TABLE + " ("
                 + USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + FIRSTNAME + " TEXT NOT NULL UNIQUE, "
+                + FIRSTNAME + " TEXT NOT NULL , "
                 + LASTNAME + " TEXT NOT NULL, "
                 + PASSWORD + " TEXT NOT NULL, "
                 + EMAIL + " TEXT UNIQUE, "
@@ -122,6 +139,7 @@ public class dbConnect extends SQLiteOpenHelper {
         String createArticleTable = "CREATE TABLE IF NOT EXISTS " + ARTICLES_TABLE + " ("
                 + ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + ARTICLE_USER_ID + " INTEGER NOT NULL, "
+                + ARTICLE_TITLE + " TEXT NOT NULL, "
                 + ARTICLE_CONTENT + " TEXT NOT NULL, "
                 + ARTICLE_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP, "
                 + ARTICLE_CATEGORY + " TEXT NOT NULL, "
@@ -322,5 +340,12 @@ public class dbConnect extends SQLiteOpenHelper {
             System.err.println("Restore failed: " + e.getMessage());
         }
     }
+
+
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+
+
 
 }

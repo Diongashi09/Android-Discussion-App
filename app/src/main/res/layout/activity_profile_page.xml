@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,11 +9,16 @@
     tools:context=".ProfilePage"
     android:id="@+id/main">
 
-    <!-- ScrollView for scrolling content -->
+    <!-- ScrollView for Profile Information -->
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
+        <!-- Inner layout for profile details -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -23,62 +29,56 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:layout_marginHorizontal="8dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="6dp"
+                android:layout_marginBottom="16dp"
                 app:cardBackgroundColor="#FFFFFF"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent">
+                app:cardCornerRadius="12dp"
+                app:cardElevation="6dp">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="16dp">
 
-                    <!-- Title Text -->
+                    <!-- Profile Title -->
                     <TextView
                         android:id="@+id/title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Profili juaj "
+                        android:text="Profili juaj"
+                        android:textColor="#333333"
                         android:textSize="24sp"
                         android:textStyle="bold"
-                        android:textColor="#333333"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        android:layout_marginBottom="16dp"
-                        android:gravity="center" />
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
+                    <!-- Profile Image -->
                     <ImageView
                         android:id="@+id/profileImage"
-                        android:layout_width="120dp"
-                        android:layout_height="120dp"
-                        android:layout_marginTop="48dp"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_marginTop="16dp"
                         android:contentDescription="Profile Image"
                         android:scaleType="centerCrop"
                         android:src="@drawable/defaultprofilepicture"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.497"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toBottomOf="@id/title" />
 
+                    <!-- Username -->
                     <TextView
                         android:id="@+id/username"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="40dp"
-                        android:gravity="center"
                         android:text="user123"
                         android:textColor="#333333"
                         android:textSize="20sp"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.498"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/profileImage" />
 
+                    <!-- First Name -->
                     <TextView
                         android:id="@+id/labelFirstName"
                         android:layout_width="wrap_content"
@@ -91,12 +91,11 @@
 
                     <TextView
                         android:id="@+id/firstName"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="John"
                         android:textColor="#333333"
                         android:textSize="16sp"
-                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/labelFirstName" />
 
@@ -105,7 +104,6 @@
                         android:id="@+id/labelLastName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
                         android:text="Mbiemri"
                         android:textColor="#666666"
                         android:textSize="14sp"
@@ -114,12 +112,11 @@
 
                     <TextView
                         android:id="@+id/lastName"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Doe"
                         android:textColor="#333333"
                         android:textSize="16sp"
-                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/labelLastName" />
 
@@ -128,7 +125,6 @@
                         android:id="@+id/labelUniversity"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
                         android:text="Universiteti"
                         android:textColor="#666666"
                         android:textSize="14sp"
@@ -137,12 +133,11 @@
 
                     <TextView
                         android:id="@+id/university"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Universiteti i Prishtinës"
                         android:textColor="#333333"
                         android:textSize="16sp"
-                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/labelUniversity" />
 
@@ -151,7 +146,6 @@
                         android:id="@+id/labelDepartment"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
                         android:text="Departmenti"
                         android:textColor="#666666"
                         android:textSize="14sp"
@@ -160,12 +154,11 @@
 
                     <TextView
                         android:id="@+id/department"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Inxhinieri Kompjuterike"
                         android:textColor="#333333"
                         android:textSize="16sp"
-                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/labelDepartment" />
 
@@ -174,7 +167,6 @@
                         android:id="@+id/labelEmail"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
                         android:text="Email"
                         android:textColor="#666666"
                         android:textSize="14sp"
@@ -183,30 +175,28 @@
 
                     <TextView
                         android:id="@+id/email"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="john.doe@example.com"
                         android:textColor="#333333"
                         android:textSize="16sp"
-                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/labelEmail" />
 
                     <!-- Edit Profile Button -->
                     <Button
                         android:id="@+id/editProfileButton"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="44dp"
                         android:text="Ndrysho Profilin"
-                        android:onClick="goToResetPassword"
-                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/email" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
+
+    <!-- RecyclerView for articles -->
+
 </androidx.constraintlayout.widget.ConstraintLayout>
