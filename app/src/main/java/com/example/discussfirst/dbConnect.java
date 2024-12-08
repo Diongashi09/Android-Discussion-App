@@ -1,5 +1,6 @@
 package com.example.discussfirst;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -346,6 +347,14 @@ public class dbConnect extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
 
+
+        if (cursor.moveToFirst()) {
+            do {
+                @SuppressLint("Range") int id = cursor.getInt(cursor.getColumnIndex(ID));
+                @SuppressLint("Range") String title = cursor.getString(cursor.getColumnIndex(ARTICLE_TITLE));
+                @SuppressLint("Range") String content = cursor.getString(cursor.getColumnIndex(ARTICLE_CONTENT));
+                @SuppressLint("Range") String category = cursor.getString(cursor.getColumnIndex(ARTICLE_CATEGORY));
+                @SuppressLint("Range") String createdAt = cursor.getString(cursor.getColumnIndex(ARTICLE_CREATED_AT));
 
 
 }
