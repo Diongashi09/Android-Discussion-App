@@ -30,15 +30,12 @@ public class ProfilePage extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
 
         int userId = getIntent().getIntExtra("USER_ID",-1);
         dbConnect dbHelper = new dbConnect(this);
-        List<Article> articles = dbHelper.getUserArticles(userId);
 
-        ArticleAdapter adapter = new ArticleAdapter(articles);
-        recyclerView.setAdapter(adapter);
+
     }
 
     // Navigate to ResetPassword Activity
