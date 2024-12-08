@@ -84,21 +84,7 @@ public class dbConnect extends SQLiteOpenHelper {
         return instance;
     }
 
-    public static String getUniversityTableName() {
-        return UNIVERSITY_TABLE;
-    }
-    public static String getDepartamentTable() {
-        return DEPARTAMENT_TABLE;
-    }
-    public static String getUniversityID() {
-        return UID;
-    }
-    public static String getUniversityName() {
-        return UNAME;
-    }
-    public static String getDepartamentID() {
-        return DEPARTAMENTID;
-    }
+
 
     @Override
     public void onCreate(@NonNull SQLiteDatabase db) {
@@ -107,7 +93,7 @@ public class dbConnect extends SQLiteOpenHelper {
 
         String createUserTable = "CREATE TABLE IF NOT EXISTS " + USERS_TABLE + " ("
                 + USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + FIRSTNAME + " TEXT NOT NULL , "
+                + FIRSTNAME + " TEXT NOT NULL UNIQUE, "
                 + LASTNAME + " TEXT NOT NULL, "
                 + PASSWORD + " TEXT NOT NULL, "
                 + EMAIL + " TEXT UNIQUE, "
@@ -341,12 +327,27 @@ public class dbConnect extends SQLiteOpenHelper {
             System.err.println("Restore failed: " + e.getMessage());
         }
     }
+    public static String getUniversityTableName() {
+        return UNIVERSITY_TABLE;
+    }
+    public static String getDepartamentTable() {
+        return DEPARTAMENT_TABLE;
+    }
+    public static String getUniversityID() {
+        return UID;
+    }
+    public static String getUniversityName() {
+        return UNAME;
+    }
+    public static String getDepartamentID() {
+        return DEPARTAMENTID;
+    }
 
-
-
+    public List<Article> getUserArticles(int userId) {
+        List<Article> articles = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
 
-
+        Cursor cursor = db.rawQuery("SELECT * FROM " + ARTICLES_TABLE + " WHERE " + ARTICLE_USER_ID + " = ?", new String[]{String.valueOf(userId)});
 
         if (cursor.moveToFirst()) {
             do {
@@ -356,5 +357,13 @@ public class dbConnect extends SQLiteOpenHelper {
                 @SuppressLint("Range") String category = cursor.getString(cursor.getColumnIndex(ARTICLE_CATEGORY));
                 @SuppressLint("Range") String createdAt = cursor.getString(cursor.getColumnIndex(ARTICLE_CREATED_AT));
 
+//                articles.add(new Article(id, userId, title, content, category, createdAt));
+                articles.add(new Article(id,userId,title,content,category,createdAt));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return articles;
+    }
 
 }
