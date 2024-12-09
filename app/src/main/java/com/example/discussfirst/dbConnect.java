@@ -13,14 +13,16 @@ import androidx.annotation.Nullable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import org.mindrot.jbcrypt.BCrypt; // Include this for hashing
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class dbConnect extends SQLiteOpenHelper {
 
     private static final String dbName = "UniConnectDB.db";
-    private static final int dbVersion = 1;
-    private static final String test ="C:\\Users\\ACER\\Desktop\\UniConnectDB.db";
+    private static final int dbVersion = 2;
+    private static final String test ="C:\\Users\\hekur\\AppData\\Local\\Google\\AndroidStudio2024.2\\device-explorer\\Medium Phone API 35\\_\\data\\data\\com.example.discussfirst\\databases\\UniConnectDB.db";
     private static final String USERS_TABLE = "User";
     private static final String UNIVERSITY_TABLE = "University";
     private static final String DEPARTAMENT_TABLE = "Departament";
@@ -84,16 +86,32 @@ public class dbConnect extends SQLiteOpenHelper {
         return instance;
     }
 
-
+    public static String getUniversityTableName() {
+        return UNIVERSITY_TABLE;
+    }
+    public static String getDepartamentTable() {
+        return DEPARTAMENT_TABLE;
+    }
+    public static String getUniversityID() {
+        return UID;
+    }
+    public static String getUniversityName() {
+        return UNAME;
+    }
+    public static String getDepartamentID() {
+        return DEPARTAMENTID;
+    }
 
     @Override
     public void onCreate(@NonNull SQLiteDatabase db) {
+        // Drop existing tables
         // Enable foreign keys
         db.execSQL("PRAGMA foreign_keys=ON;");
 
+        // Recreate tables
         String createUserTable = "CREATE TABLE IF NOT EXISTS " + USERS_TABLE + " ("
                 + USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + FIRSTNAME + " TEXT NOT NULL UNIQUE, "
+                + FIRSTNAME + " TEXT NOT NULL , "
                 + LASTNAME + " TEXT NOT NULL, "
                 + PASSWORD + " TEXT NOT NULL, "
                 + EMAIL + " TEXT UNIQUE, "
@@ -104,11 +122,9 @@ public class dbConnect extends SQLiteOpenHelper {
                 + GENDER + " TEXT, "
                 + PROFILE_IMAGE + " TEXT, "
                 + ISBLOCKED + " BOOLEAN, "
-
                 + "FOREIGN KEY(" + DEPARTAMENTID + ") REFERENCES " + DEPARTAMENT_TABLE + "(" + DEPARTAMENTID + ") ON DELETE CASCADE, "
                 + "FOREIGN KEY(" + UID + ") REFERENCES " + UNIVERSITY_TABLE + "(" + UID + ") ON DELETE CASCADE)";
         db.execSQL(createUserTable);
-
 
         String createUniversityTable = "CREATE TABLE IF NOT EXISTS  " + UNIVERSITY_TABLE + " ("
                 + UID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -121,7 +137,6 @@ public class dbConnect extends SQLiteOpenHelper {
                 + UID + " INTEGER NOT NULL, "
                 + "FOREIGN KEY(" + UID + ") REFERENCES " + UNIVERSITY_TABLE + "(" + UID + ") ON DELETE CASCADE)";
         db.execSQL(createDepartmentTable);
-
 
         String createArticleTable = "CREATE TABLE IF NOT EXISTS " + ARTICLES_TABLE + " ("
                 + ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -176,14 +191,17 @@ public class dbConnect extends SQLiteOpenHelper {
                 + "FOREIGN KEY(" + ARTICLE_ID + ") REFERENCES " + ARTICLES_TABLE + "(" + ID + ") ON DELETE CASCADE)";
         db.execSQL(createArticleLikeTable);
     }
-    public boolean registerUser(String firstName, String lastName, String email, String password, String phoneNumber, String gender, int departmentId, int universityId, String profileImage, boolean isBlocked) {
+
+    public boolean registerUser(String firstName, String lastName, String email, String plainPassword, String phoneNumber, String gender, int departmentId, int universityId, String profileImage, boolean isBlocked) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
+
+        String hashedPassword = BCrypt.hashpw(plainPassword, BCrypt.gensalt()); // Hash the password
 
         values.put(FIRSTNAME, firstName);
         values.put(LASTNAME, lastName);
         values.put(EMAIL, email);
-        values.put(PASSWORD, password);
+        values.put(PASSWORD, hashedPassword); // Store the hashed password
         values.put(PHONE_NUMBER, phoneNumber);
         values.put(GENDER, gender);
         values.put(DEPARTAMENTID, departmentId);
@@ -196,6 +214,7 @@ public class dbConnect extends SQLiteOpenHelper {
 
         return result != -1;
     }
+
     public void insertTestData() {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -258,29 +277,61 @@ public class dbConnect extends SQLiteOpenHelper {
         values.clear();
 
 
-    }
-    public boolean checkUser(String email, String password) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM User WHERE email = ? AND password = ?", new String[]{email, password});
+        values.put(ARTICLE_USER_ID, 1);
+        values.put(ARTICLE_CONTENT, "Exploring the future of AI in education.");
+        values.put(ARTICLE_CATEGORY, "Technology");
+        values.put(ARTICLE_TITLE, "Technologyyy");
+        db.insert(ARTICLES_TABLE, null, values);
+        values.clear();
 
-        boolean exists = cursor.getCount() > 0;
+    }
+    public boolean checkUser(String email, String plainPassword) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT " + PASSWORD + " FROM " + USERS_TABLE + " WHERE " + EMAIL + " = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{email});
+
+        boolean isValid = false;
+
+        if (cursor.moveToFirst()) {
+            String storedHashedPassword = cursor.getString(cursor.getColumnIndex(PASSWORD));
+            isValid = BCrypt.checkpw(plainPassword, storedHashedPassword); // Verify hashed password
+        }
         cursor.close();
         db.close();
 
-        return exists;
+        return isValid;
     }
+
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("ALTER TABLE " + USERS_TABLE + " RENAME TO temp_Users");
 
-        onCreate(db);
+        if (oldVersion < 2) {
+            // Add new column `articleTitle` to the Article table
+            db.execSQL("ALTER TABLE " + ARTICLES_TABLE + " ADD COLUMN title TEXT DEFAULT ''");
 
-        db.execSQL("INSERT INTO " + USERS_TABLE + " (firstname, lastname, email, password, phone_number, gender, departamentid, uid, profile_image, isblocked) " +
-                "SELECT firstname, lastname, email, password, phone_number, gender, departamentid, uid, profile_image, isblocked FROM temp_Users");
+            // No need to recreate Article table, the column is added dynamically.
+        }
+        else{
+            db.execSQL("ALTER TABLE " + USERS_TABLE + " RENAME TO temp_Users");
 
+            onCreate(db);
+
+            db.execSQL("INSERT INTO " + USERS_TABLE + " (firstname, lastname, email, password, phone_number, gender, departamentid, uid, profile_image, isblocked) " +
+                    "SELECT firstname, lastname, email, password, phone_number, gender, departamentid, uid, profile_image, isblocked FROM temp_Users");
+        }
     }
+    public int getUserId(String email) {
+        String query = "SELECT id FROM User WHERE email = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{email});
 
+        int userId = -1;  // Default value if user is not found
+        if (cursor.moveToFirst()) {
+            userId = cursor.getInt(cursor.getColumnIndex("id"));
+        }
+        cursor.close();
+        return userId;
+    }
     public void backupDatabase(Context context) {
         try {
             File currentDB = context.getDatabasePath(test);
@@ -365,5 +416,12 @@ public class dbConnect extends SQLiteOpenHelper {
         db.close();
         return articles;
     }
+
+
+
+    SQLiteDatabase db = this.getReadableDatabase();
+
+
+
 
 }
