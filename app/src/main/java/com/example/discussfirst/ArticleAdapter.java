@@ -14,7 +14,8 @@ import java.util.List;
 public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleViewHolder> {
 
     private List<Article> articleList;
-    //koment
+
+    //sdsdsd
     private OnArticleDeleteListener deleteListener;
 
     public ArticleAdapter(List<Article> articleList, OnArticleDeleteListener deleteListener) {

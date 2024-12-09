@@ -343,10 +343,11 @@ public class dbConnect extends SQLiteOpenHelper {
     }
 
 
-
+    public List<Article> getUserArticles(int userId) {
+        List<Article> articles = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
 
-
+        Cursor cursor = db.rawQuery("SELECT * FROM " + ARTICLES_TABLE + " WHERE " + ARTICLE_USER_ID + " = ?", new String[]{String.valueOf(userId)});
 
         if (cursor.moveToFirst()) {
             do {
@@ -356,5 +357,13 @@ public class dbConnect extends SQLiteOpenHelper {
                 @SuppressLint("Range") String category = cursor.getString(cursor.getColumnIndex(ARTICLE_CATEGORY));
                 @SuppressLint("Range") String createdAt = cursor.getString(cursor.getColumnIndex(ARTICLE_CREATED_AT));
 
+//                articles.add(new Article(id, userId, title, content, category, createdAt));
+                articles.add(new Article(id,userId,title,content,category,createdAt));
+            } while (cursor.moveToNext());
+        }//sdsd
+        cursor.close();
+        db.close();
+        return articles;
+    }
 
 }

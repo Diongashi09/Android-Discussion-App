@@ -18,7 +18,8 @@ public class Article {
     }
 
     // Getters
-    //koment
+
+    //sdsd
     public int getId() { return this.id; }
     public int getUserId() { return userId; }
     public String getTitle() { return title; }
