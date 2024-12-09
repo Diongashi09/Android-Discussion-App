@@ -42,7 +42,7 @@ public class ProfilePage extends AppCompatActivity {
         adapter = new ArticleAdapter(articles, (article, position) -> {
             dbHelper.deleteArticle(article.getId());
             adapter.removeItem(position);
-        });
+        });//koment
 
         recyclerView.setAdapter(adapter);
     }

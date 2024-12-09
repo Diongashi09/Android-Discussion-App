@@ -362,6 +362,7 @@ public class dbConnect extends SQLiteOpenHelper {
                 articles.add(new Article(id,userId,title,content,category,createdAt));
             } while (cursor.moveToNext());
         }
+        //koment
         cursor.close();
         db.close();
         return articles;
