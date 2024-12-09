@@ -6,7 +6,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -344,11 +343,10 @@ public class dbConnect extends SQLiteOpenHelper {
     }
 
 
-    public List<Article> getUserArticles(int userId) {
-        List<Article> articles = new ArrayList<>();
+
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.rawQuery("SELECT * FROM " + ARTICLES_TABLE + " WHERE " + ARTICLE_USER_ID + " = ?", new String[]{String.valueOf(userId)});
+
 
         if (cursor.moveToFirst()) {
             do {
@@ -357,33 +355,6 @@ public class dbConnect extends SQLiteOpenHelper {
                 @SuppressLint("Range") String content = cursor.getString(cursor.getColumnIndex(ARTICLE_CONTENT));
                 @SuppressLint("Range") String category = cursor.getString(cursor.getColumnIndex(ARTICLE_CATEGORY));
                 @SuppressLint("Range") String createdAt = cursor.getString(cursor.getColumnIndex(ARTICLE_CREATED_AT));
-
-//                articles.add(new Article(id, userId, title, content, category, createdAt));
-                articles.add(new Article(id,userId,title,content,category,createdAt));
-            } while (cursor.moveToNext());
-        }
-        //koment
-        cursor.close();
-        db.close();
-        return articles;
-    }
-
-    public void deleteArticle(int articleId) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        try {
-            db.execSQL("PRAGMA foreign_keys=ON;"); // Enable foreign key constraints
-            int rowsAffected = db.delete(ARTICLES_TABLE, ID + " = ?", new String[]{String.valueOf(articleId)});
-            if (rowsAffected > 0) {
-                Log.d("DB_LOG", "Article with ID " + articleId + " deleted successfully.");
-            } else {
-                Log.w("DB_LOG", "No article found with ID " + articleId);
-            }
-        } catch (Exception e) {
-            Log.e("DB_LOG", "Error deleting article with ID " + articleId, e);
-        } finally {
-            db.close();
-        }
-    }
 
 
 }

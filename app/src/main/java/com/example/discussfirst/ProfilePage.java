@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 public class ProfilePage extends AppCompatActivity {
-    private ArticleAdapter adapter;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -32,19 +31,11 @@ public class ProfilePage extends AppCompatActivity {
             return insets;
         });
 
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         int userId = getIntent().getIntExtra("USER_ID",-1);
         dbConnect dbHelper = new dbConnect(this);
-        List<Article> articles = dbHelper.getUserArticles(userId);
 
-        adapter = new ArticleAdapter(articles, (article, position) -> {
-            dbHelper.deleteArticle(article.getId());
-            adapter.removeItem(position);
-        });//koment
 
-        recyclerView.setAdapter(adapter);
     }
 
     // Navigate to ResetPassword Activity
