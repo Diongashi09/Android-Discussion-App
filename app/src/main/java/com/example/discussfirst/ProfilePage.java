@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 public class ProfilePage extends AppCompatActivity {
+    private ArticleAdapter adapter;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -30,6 +31,7 @@ public class ProfilePage extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -37,7 +39,11 @@ public class ProfilePage extends AppCompatActivity {
         dbConnect dbHelper = new dbConnect(this);
         List<Article> articles = dbHelper.getUserArticles(userId);
 
-        ArticleAdapter adapter = new ArticleAdapter(articles);
+        adapter = new ArticleAdapter(articles, (article, position) -> {
+            dbHelper.deleteArticle(article.getId());
+            adapter.removeItem(position);
+        });
+
         recyclerView.setAdapter(adapter);
     }
 

@@ -18,7 +18,7 @@ public class Article {
     }
 
     // Getters
-    public int getId() { return id; }
+    public int getId() { return this.id; }
     public int getUserId() { return userId; }
     public String getTitle() { return title; }
     public String getContent() { return content; }
