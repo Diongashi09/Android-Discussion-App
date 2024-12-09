@@ -48,8 +48,15 @@
             android:name=".LogInPage"
             android:exported="false" />
         <activity
+            android:name=".ArticleActivity"
+            android:exported="true"/>
+        <activity
+            android:name=".ArticleDetailActivity"
+            android:exported="true"/>
+        <activity
             android:name=".MainActivity"
             android:exported="true">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
