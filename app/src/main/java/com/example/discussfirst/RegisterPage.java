@@ -94,9 +94,8 @@ public class RegisterPage extends AppCompatActivity {
             Toast.makeText(this, "Please enter your phone number!", Toast.LENGTH_SHORT).show();
             return;
         }
-        String encryptedPassword = Encryption.encrypt(password);
 
-        registerUser(firstName, lastName, email, encryptedPassword, phoneNumber, gender, departmentId, universityId, profileImage, isBlocked);
+        registerUser(firstName, lastName, email, password, phoneNumber, gender, departmentId, universityId, profileImage, isBlocked);
     }
 
     private void registerUser(String firstName, String lastName, String email, String password, String phoneNumber, String gender, int departmentId, int universityId, String profileImage, boolean isBlocked) {
