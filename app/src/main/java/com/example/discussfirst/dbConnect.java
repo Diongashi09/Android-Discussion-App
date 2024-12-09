@@ -411,17 +411,27 @@ public class dbConnect extends SQLiteOpenHelper {
 //                articles.add(new Article(id, userId, title, content, category, createdAt));
                 articles.add(new Article(id,userId,title,content,category,createdAt));
             } while (cursor.moveToNext());
+
         }
-        cursor.close();
-        db.close();
-        return articles;
+      
+
+  }
+
+public void deleteArticle(int articleId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        try {
+            db.execSQL("PRAGMA foreign_keys=ON;"); // Enable foreign key constraints
+            int rowsAffected = db.delete(ARTICLES_TABLE, ID + " = ?", new String[]{String.valueOf(articleId)});
+            if (rowsAffected > 0) {
+                Log.d("DB_LOG", "Article with ID " + articleId + " deleted successfully.");
+            } else {
+                Log.w("DB_LOG", "No article found with ID " + articleId);
+            }
+        } catch (Exception e) {
+            Log.e("DB_LOG", "Error deleting article with ID " + articleId, e);
+        } finally {
+            db.close();
+        }
     }
-
-
-
-    SQLiteDatabase db = this.getReadableDatabase();
-
-
-
 
 }
