@@ -6,6 +6,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -423,13 +424,15 @@ public class dbConnect extends SQLiteOpenHelper {
                 @SuppressLint("Range") String createdAt = cursor.getString(cursor.getColumnIndex(ARTICLE_CREATED_AT));
 
 //                articles.add(new Article(id, userId, title, content, category, createdAt));
-                articles.add(new Article(id,userId,title,content,category,createdAt));
+                articles.add(new Article(id, userId, title, content, category, createdAt));
             } while (cursor.moveToNext());
 
         }
-      
 
-  }
+        cursor.close();
+        db.close();
+        return articles;
+}
 
 public void deleteArticle(int articleId) {
         SQLiteDatabase db = this.getWritableDatabase();
