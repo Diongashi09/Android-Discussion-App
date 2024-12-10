@@ -1,212 +1,98 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5"
-    tools:context=".ProfilePage"
-    android:id="@+id/main">
+    android:orientation="vertical"
+    android:padding="16dp">
 
-    <!-- ScrollView for scrolling content -->
-    <ScrollView
+    <ImageView
+        android:id="@+id/profilePicture"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:src="@drawable/received"
+        android:layout_marginBottom="16dp" />
+    <!-- First Name -->
+    <TextView
+        android:id="@+id/textFirstName"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:text="First Name"
+        android:padding="16dp"
+        android:textSize="16sp"
+        android:background="@android:color/white"
+        android:layout_marginBottom="8dp" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="16dp">
+    <!-- Last Name -->
+    <TextView
+        android:id="@+id/textLastName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Last Name"
+        android:padding="16dp"
+        android:textSize="16sp"
+        android:background="@android:color/white"
+        android:layout_marginBottom="8dp" />
 
-            <!-- Profile Card -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginHorizontal="8dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="6dp"
-                app:cardBackgroundColor="#FFFFFF"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent">
+    <!-- Email (Read-Only) -->
+    <TextView
+        android:id="@+id/textEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Email"
+        android:padding="16dp"
+        android:textSize="16sp"
+        android:background="@android:color/white"
+        android:layout_marginBottom="8dp" />
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="16dp">
+    <!-- Phone Number -->
+    <EditText
+        android:id="@+id/textNumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Phone Number"
+        android:padding="16dp"
+        android:textSize="16sp"
+        android:inputType="phone"
+        android:background="@android:color/white"
+        android:layout_marginBottom="8dp" />
 
-                    <!-- Title Text -->
-                    <TextView
-                        android:id="@+id/title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Profili juaj "
-                        android:textSize="24sp"
-                        android:textStyle="bold"
-                        android:textColor="#333333"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        android:layout_marginBottom="16dp"
-                        android:gravity="center" />
+    <TextView
+        android:id="@+id/textGender"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Gender"
+        android:padding="16dp"
+        android:textSize="16sp"
+        android:background="@android:color/white"
+        android:layout_marginBottom="8dp" />
 
-                    <ImageView
-                        android:id="@+id/profileImage"
-                        android:layout_width="120dp"
-                        android:layout_height="120dp"
-                        android:layout_marginTop="48dp"
-                        android:contentDescription="Profile Image"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/defaultprofilepicture"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.497"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/textDepartament"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Departament"
+        android:padding="16dp"
+        android:textSize="16sp"
+        android:background="@android:color/white"
+        android:layout_marginBottom="8dp" />
 
-                    <TextView
-                        android:id="@+id/username"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="40dp"
-                        android:gravity="center"
-                        android:text="user123"
-                        android:textColor="#333333"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.498"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/profileImage" />
+    <TextView
+        android:id="@+id/textUniversity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="University"
+        android:padding="16dp"
+        android:textSize="16sp"
+        android:background="@android:color/white"
+        android:layout_marginBottom="8dp" />
 
-                    <TextView
-                        android:id="@+id/labelFirstName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Emri"
-                        android:textColor="#666666"
-                        android:textSize="14sp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/username" />
-
-                    <TextView
-                        android:id="@+id/firstName"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="John"
-                        android:textColor="#333333"
-                        android:textSize="16sp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/labelFirstName" />
-
-                    <!-- Last Name -->
-                    <TextView
-                        android:id="@+id/labelLastName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:text="Mbiemri"
-                        android:textColor="#666666"
-                        android:textSize="14sp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/firstName" />
-
-                    <TextView
-                        android:id="@+id/lastName"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="Doe"
-                        android:textColor="#333333"
-                        android:textSize="16sp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/labelLastName" />
-
-                    <!-- University -->
-                    <TextView
-                        android:id="@+id/labelUniversity"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:text="Universiteti"
-                        android:textColor="#666666"
-                        android:textSize="14sp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/lastName" />
-
-                    <TextView
-                        android:id="@+id/university"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="Universiteti i Prishtinës"
-                        android:textColor="#333333"
-                        android:textSize="16sp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/labelUniversity" />
-
-                    <!-- Department -->
-                    <TextView
-                        android:id="@+id/labelDepartment"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:text="Departmenti"
-                        android:textColor="#666666"
-                        android:textSize="14sp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/university" />
-
-                    <TextView
-                        android:id="@+id/department"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="Inxhinieri Kompjuterike"
-                        android:textColor="#333333"
-                        android:textSize="16sp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/labelDepartment" />
-
-                    <!-- Email -->
-                    <TextView
-                        android:id="@+id/labelEmail"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:text="Email"
-                        android:textColor="#666666"
-                        android:textSize="14sp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/department" />
-
-                    <TextView
-                        android:id="@+id/email"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="john.doe@example.com"
-                        android:textColor="#333333"
-                        android:textSize="16sp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/labelEmail" />
-
-                    <!-- Edit Profile Button -->
-                    <Button
-                        android:id="@+id/editProfileButton"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="44dp"
-                        android:text="Ndrysho Profilin"
-                        android:onClick="goToResetPassword"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/email" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </androidx.cardview.widget.CardView>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <Button
+        android:id="@+id/btnChangePassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ndrysho Profilin"
+        android:padding="16dp"
+        android:minHeight="48dp"
+        android:onClick="goToResetPassword" />
+</LinearLayout>
