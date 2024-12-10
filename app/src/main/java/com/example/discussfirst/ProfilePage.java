@@ -37,6 +37,7 @@ public class ProfilePage extends AppCompatActivity {
 
 
     }
+    //sdsds
 
     // Navigate to ResetPassword Activity
     public void goToResetPassword(View view) {
