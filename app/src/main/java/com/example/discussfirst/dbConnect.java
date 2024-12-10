@@ -75,6 +75,7 @@ public class dbConnect extends SQLiteOpenHelper {
 
     private static dbConnect instance;
 
+    dbConnect(@Nullable Context context) {
     protected dbConnect(@Nullable Context context) {
         super(context, dbName, null, dbVersion);
     }
@@ -109,7 +110,7 @@ public class dbConnect extends SQLiteOpenHelper {
         // Enable foreign keys
         db.execSQL("PRAGMA foreign_keys=ON;");
 
-        // Recreate tables
+
         String createUserTable = "CREATE TABLE IF NOT EXISTS " + USERS_TABLE + " ("
                 + USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + FIRSTNAME + " TEXT NOT NULL , "
@@ -408,7 +409,30 @@ public class dbConnect extends SQLiteOpenHelper {
             System.err.println("Restore failed: " + e.getMessage());
         }
     }
+    public boolean setTemporaryPassword(String email, String tempPassword) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("temporary_password", tempPassword);
+        int rowsUpdated = db.update("User", values, "email = ?", new String[]{email});
+        return rowsUpdated > 0;
+    }
 
+    public boolean verifyTemporaryPassword(String email, String tempPassword) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM User WHERE email = ? AND temporary_password = ?",
+                new String[]{email, tempPassword});
+        boolean valid = cursor.getCount() > 0;
+        cursor.close();
+        return valid;
+    }
+
+    public boolean clearTemporaryPassword(String email) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.putNull("temporary_password");
+        int rowsUpdated = db.update("User", values, "email = ?", new String[]{email});
+        return rowsUpdated > 0;
+    }
     public List<Article> getUserArticles(int userId) {
         List<Article> articles = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();

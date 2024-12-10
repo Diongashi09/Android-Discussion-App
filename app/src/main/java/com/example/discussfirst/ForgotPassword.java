@@ -2,10 +2,10 @@ package com.example.discussfirst;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -18,7 +18,7 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-public class EmailVerification extends AppCompatActivity {
+public class ForgotPassword extends AppCompatActivity {
 
     private EditText emailInput;
     private Button sendButton;
@@ -32,18 +32,25 @@ public class EmailVerification extends AppCompatActivity {
         emailInput = findViewById(R.id.emailInput);
         sendButton = findViewById(R.id.sendButton);
 
+        // Eventi kur shtypet butoni
         sendButton.setOnClickListener(v -> {
-            String email = emailInput.getText().toString().trim(); // Already retrieved from login
-            String code = generateVerificationCode();
+            String email = emailInput.getText().toString().trim(); // Merr emailin nga fusha e hyrjes
+            if (email.isEmpty()) {
+                Toast.makeText(this, "Please enter a valid email!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            String code = generateVerificationCode(); // Gjeneron kodin e verifikimit
             sentCode = code;
-            sendEmail(email, code);
+            sendEmail(email, code); // Dërgon emailin me kodin
         });
     }
 
+    // Gjeneron një kod verifikimi 6-shifror
     private String generateVerificationCode() {
         return String.valueOf((int) (Math.random() * 900000) + 100000);
     }
 
+    // Funksioni për dërgimin e emailit
     private void sendEmail(String recipient, String code) {
         final String senderEmail = "erand.kurtaliqi@student.uni-pr.edu";
         final String senderPassword = "lmpp pseh chzs osdc";
@@ -72,17 +79,16 @@ public class EmailVerification extends AppCompatActivity {
                 Transport.send(message);
 
                 runOnUiThread(() -> {
-                    Toast.makeText(EmailVerification.this, "Verification code sent!", Toast.LENGTH_SHORT).show();
-                    String emailFromLogin = getIntent().getStringExtra("USER_EMAIL");
-                    Intent intent = new Intent(EmailVerification.this, CodeVerificationActivity.class);
+                    Toast.makeText(ForgotPassword.this, "Verification code sent!", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(ForgotPassword.this, ForgotVerificationActivity.class);
                     intent.putExtra("sentCode", sentCode);
-                    intent.putExtra("USER_EMAIL", emailFromLogin);
+                    intent.putExtra("USER_EMAIL", recipient);
                     startActivity(intent);
                 });
             } catch (Exception e) {
                 Log.e("EmailVerification", "Dërgimi i emailit dështoi", e);
                 runOnUiThread(() -> {
-                    Toast.makeText(EmailVerification.this, "Dërgimi i emailit dështoi: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(ForgotPassword.this, "Dërgimi i emailit dështoi: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 });
             }
         }).start();
