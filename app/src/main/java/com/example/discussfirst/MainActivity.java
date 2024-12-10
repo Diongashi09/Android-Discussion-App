@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
     Button btnGoToLogin;
     Button btnGoToRegister;
 
-
+    //sdsadsa
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,14 +40,14 @@ public class MainActivity extends AppCompatActivity {
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         dbHelper.insertTestData();
-        File backupFile = new File(getExternalFilesDir(null), "Backup/UniConnectDB.db");
+       /* File backupFile = new File(getExternalFilesDir(null), "Backup/UniConnectDB.db");
         if (backupFile.exists()) {
             dbHelper.restoreDatabase(this);
             System.out.println("Database restored from backup.");
         } else {
             dbHelper.backupDatabase(this);
             System.out.println("Initial backup completed.");
-        }
+        }*/
         btnGoToRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

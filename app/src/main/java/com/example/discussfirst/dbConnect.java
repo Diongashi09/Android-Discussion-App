@@ -1,10 +1,12 @@
 package com.example.discussfirst;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,12 +14,16 @@ import androidx.annotation.Nullable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import org.mindrot.jbcrypt.BCrypt; // Include this for hashing
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class dbConnect extends SQLiteOpenHelper {
 
     private static final String dbName = "UniConnectDB.db";
-    private static final int dbVersion = 1;
-    private static final String test ="C:\\Users\\ACER\\Desktop\\UniConnectDB.db";
+    private static final int dbVersion = 2;
+    private static final String test ="C:\\Users\\hekur\\AppData\\Local\\Google\\AndroidStudio2024.2\\device-explorer\\Medium Phone API 35\\_\\data\\data\\com.example.discussfirst\\databases\\UniConnectDB.db";
     private static final String USERS_TABLE = "User";
     private static final String UNIVERSITY_TABLE = "University";
     private static final String DEPARTAMENT_TABLE = "Departament";
@@ -52,6 +58,7 @@ public class dbConnect extends SQLiteOpenHelper {
 
     // Article table column names
     private static final String ARTICLE_USER_ID = "userId";
+    private static final String ARTICLE_TITLE = "title";
     private static final String ARTICLE_CONTENT = "content";
     private static final String ARTICLE_CREATED_AT = "createdAt";
     private static final String ARTICLE_CATEGORY = "category";
@@ -69,6 +76,7 @@ public class dbConnect extends SQLiteOpenHelper {
     private static dbConnect instance;
 
     dbConnect(@Nullable Context context) {
+    protected dbConnect(@Nullable Context context) {
         super(context, dbName, null, dbVersion);
     }
 
@@ -80,17 +88,32 @@ public class dbConnect extends SQLiteOpenHelper {
         return instance;
     }
 
-
+    public static String getUniversityTableName() {
+        return UNIVERSITY_TABLE;
+    }
+    public static String getDepartamentTable() {
+        return DEPARTAMENT_TABLE;
+    }
+    public static String getUniversityID() {
+        return UID;
+    }
+    public static String getUniversityName() {
+        return UNAME;
+    }
+    public static String getDepartamentID() {
+        return DEPARTAMENTID;
+    }
 
     @Override
     public void onCreate(@NonNull SQLiteDatabase db) {
+        // Drop existing tables
         // Enable foreign keys
         db.execSQL("PRAGMA foreign_keys=ON;");
 
 
         String createUserTable = "CREATE TABLE IF NOT EXISTS " + USERS_TABLE + " ("
                 + USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + FIRSTNAME + " TEXT NOT NULL UNIQUE, "
+                + FIRSTNAME + " TEXT NOT NULL , "
                 + LASTNAME + " TEXT NOT NULL, "
                 + PASSWORD + " TEXT NOT NULL, "
                 + EMAIL + " TEXT UNIQUE, "
@@ -101,7 +124,6 @@ public class dbConnect extends SQLiteOpenHelper {
                 + GENDER + " TEXT, "
                 + PROFILE_IMAGE + " TEXT, "
                 + ISBLOCKED + " BOOLEAN, "
-
                 + "FOREIGN KEY(" + DEPARTAMENTID + ") REFERENCES " + DEPARTAMENT_TABLE + "(" + DEPARTAMENTID + ") ON DELETE CASCADE, "
                 + "FOREIGN KEY(" + UID + ") REFERENCES " + UNIVERSITY_TABLE + "(" + UID + ") ON DELETE CASCADE)";
         db.execSQL(createUserTable);
@@ -118,10 +140,10 @@ public class dbConnect extends SQLiteOpenHelper {
                 + "FOREIGN KEY(" + UID + ") REFERENCES " + UNIVERSITY_TABLE + "(" + UID + ") ON DELETE CASCADE)";
         db.execSQL(createDepartmentTable);
 
-
         String createArticleTable = "CREATE TABLE IF NOT EXISTS " + ARTICLES_TABLE + " ("
                 + ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + ARTICLE_USER_ID + " INTEGER NOT NULL, "
+                + ARTICLE_TITLE + " TEXT NOT NULL, "
                 + ARTICLE_CONTENT + " TEXT NOT NULL, "
                 + ARTICLE_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP, "
                 + ARTICLE_CATEGORY + " TEXT NOT NULL, "
@@ -171,14 +193,17 @@ public class dbConnect extends SQLiteOpenHelper {
                 + "FOREIGN KEY(" + ARTICLE_ID + ") REFERENCES " + ARTICLES_TABLE + "(" + ID + ") ON DELETE CASCADE)";
         db.execSQL(createArticleLikeTable);
     }
-    public boolean registerUser(String firstName, String lastName, String email, String password, String phoneNumber, String gender, int departmentId, int universityId, String profileImage, boolean isBlocked) {
+
+    public boolean registerUser(String firstName, String lastName, String email, String plainPassword, String phoneNumber, String gender, int departmentId, int universityId, String profileImage, boolean isBlocked) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
+
+        String hashedPassword = BCrypt.hashpw(plainPassword, BCrypt.gensalt()); // Hash the password
 
         values.put(FIRSTNAME, firstName);
         values.put(LASTNAME, lastName);
         values.put(EMAIL, email);
-        values.put(PASSWORD, password);
+        values.put(PASSWORD, hashedPassword); // Store the hashed password
         values.put(PHONE_NUMBER, phoneNumber);
         values.put(GENDER, gender);
         values.put(DEPARTAMENTID, departmentId);
@@ -191,6 +216,7 @@ public class dbConnect extends SQLiteOpenHelper {
 
         return result != -1;
     }
+
     public void insertTestData() {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -253,28 +279,89 @@ public class dbConnect extends SQLiteOpenHelper {
         values.clear();
 
 
-    }
-    public boolean checkUser(String email, String password) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM User WHERE email = ? AND password = ?", new String[]{email, password});
+        values.put(ARTICLE_USER_ID, 1);
+        values.put(ARTICLE_CONTENT, "Exploring the future of AI in education.");
+        values.put(ARTICLE_CATEGORY, "Technology");
+        values.put(ARTICLE_TITLE, "Technologyyy");
+        db.insert(ARTICLES_TABLE, null, values);
+        values.clear();
 
-        boolean exists = cursor.getCount() > 0;
+    }
+    public boolean checkUser(String email, String plainPassword) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT " + PASSWORD + " FROM " + USERS_TABLE + " WHERE " + EMAIL + " = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{email});
+
+        boolean isValid = false;
+
+        if (cursor.moveToFirst()) {
+            int passwordColumnIndex = cursor.getColumnIndex(PASSWORD);
+
+            // Check if the column exists and has a valid index
+            if (passwordColumnIndex >= 0) {
+                String storedHashedPassword = cursor.getString(passwordColumnIndex);
+                isValid = BCrypt.checkpw(plainPassword, storedHashedPassword); // Verify hashed password
+            }
+        }
         cursor.close();
         db.close();
 
-        return exists;
+        return isValid;
     }
+
+
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("ALTER TABLE " + USERS_TABLE + " RENAME TO temp_Users");
 
-        onCreate(db);
+        if (oldVersion < 2) {
+            // Add new column `articleTitle` to the Article table
+            db.execSQL("ALTER TABLE " + ARTICLES_TABLE + " ADD COLUMN title TEXT DEFAULT ''");
 
-        db.execSQL("INSERT INTO " + USERS_TABLE + " (firstname, lastname, email, password, phone_number, gender, departamentid, uid, profile_image, isblocked) " +
-                "SELECT firstname, lastname, email, password, phone_number, gender, departamentid, uid, profile_image, isblocked FROM temp_Users");
+            // No need to recreate Article table, the column is added dynamically.
+        }
+        else{
+            db.execSQL("ALTER TABLE " + USERS_TABLE + " RENAME TO temp_Users");
 
+            onCreate(db);
+
+            db.execSQL("INSERT INTO " + USERS_TABLE + " (firstname, lastname, email, password, phone_number, gender, departamentid, uid, profile_image, isblocked) " +
+                    "SELECT firstname, lastname, email, password, phone_number, gender, departamentid, uid, profile_image, isblocked FROM temp_Users");
+        }
     }
+    public int getUserId(String email) {
+        SQLiteDatabase db = null;
+        Cursor cursor = null;
+        int userId = -1;  // Default value if user is not found
+
+        try {
+            db = this.getReadableDatabase();  // Open the database
+            String query = "SELECT id FROM User WHERE email = ?";
+            cursor = db.rawQuery(query, new String[]{email});
+
+            if (cursor.moveToFirst()) {
+                int idColumnIndex = cursor.getColumnIndex("id");
+
+                // Check if the column index is valid
+                if (idColumnIndex >= 0) {
+                    userId = cursor.getInt(idColumnIndex);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            // Close the cursor and the database only after all operations are complete
+            if (cursor != null) {
+                cursor.close();
+            }
+            if (db != null && db.isOpen()) {
+                db.close();
+            }
+        }
+
+        return userId;
+    }
+
 
     public void backupDatabase(Context context) {
         try {
@@ -346,4 +433,46 @@ public class dbConnect extends SQLiteOpenHelper {
         int rowsUpdated = db.update("User", values, "email = ?", new String[]{email});
         return rowsUpdated > 0;
     }
+    public List<Article> getUserArticles(int userId) {
+        List<Article> articles = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM " + ARTICLES_TABLE + " WHERE " + ARTICLE_USER_ID + " = ?", new String[]{String.valueOf(userId)});
+
+        if (cursor.moveToFirst()) {
+            do {
+                @SuppressLint("Range") int id = cursor.getInt(cursor.getColumnIndex(ID));
+                @SuppressLint("Range") String title = cursor.getString(cursor.getColumnIndex(ARTICLE_TITLE));
+                @SuppressLint("Range") String content = cursor.getString(cursor.getColumnIndex(ARTICLE_CONTENT));
+                @SuppressLint("Range") String category = cursor.getString(cursor.getColumnIndex(ARTICLE_CATEGORY));
+                @SuppressLint("Range") String createdAt = cursor.getString(cursor.getColumnIndex(ARTICLE_CREATED_AT));
+
+//                articles.add(new Article(id, userId, title, content, category, createdAt));
+                articles.add(new Article(id, userId, title, content, category, createdAt));
+            } while (cursor.moveToNext());
+
+        }
+
+        cursor.close();
+        db.close();
+        return articles;
+}
+
+public void deleteArticle(int articleId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        try {
+            db.execSQL("PRAGMA foreign_keys=ON;"); // Enable foreign key constraints
+            int rowsAffected = db.delete(ARTICLES_TABLE, ID + " = ?", new String[]{String.valueOf(articleId)});
+            if (rowsAffected > 0) {
+                Log.d("DB_LOG", "Article with ID " + articleId + " deleted successfully.");
+            } else {
+                Log.w("DB_LOG", "No article found with ID " + articleId);
+            }
+        } catch (Exception e) {
+            Log.e("DB_LOG", "Error deleting article with ID " + articleId, e);
+        } finally {
+            db.close();
+        }
+    }
+
 }
