@@ -293,14 +293,20 @@ public class dbConnect extends SQLiteOpenHelper {
         boolean isValid = false;
 
         if (cursor.moveToFirst()) {
-            String storedHashedPassword = cursor.getString(cursor.getColumnIndex(PASSWORD));
-            isValid = BCrypt.checkpw(plainPassword, storedHashedPassword); // Verify hashed password
+            int passwordColumnIndex = cursor.getColumnIndex(PASSWORD);
+
+            // Check if the column exists and has a valid index
+            if (passwordColumnIndex >= 0) {
+                String storedHashedPassword = cursor.getString(passwordColumnIndex);
+                isValid = BCrypt.checkpw(plainPassword, storedHashedPassword); // Verify hashed password
+            }
         }
         cursor.close();
         db.close();
 
         return isValid;
     }
+
 
 
     @Override
@@ -322,16 +328,39 @@ public class dbConnect extends SQLiteOpenHelper {
         }
     }
     public int getUserId(String email) {
-        String query = "SELECT id FROM User WHERE email = ?";
-        Cursor cursor = db.rawQuery(query, new String[]{email});
-
+        SQLiteDatabase db = null;
+        Cursor cursor = null;
         int userId = -1;  // Default value if user is not found
-        if (cursor.moveToFirst()) {
-            userId = cursor.getInt(cursor.getColumnIndex("id"));
+
+        try {
+            db = this.getReadableDatabase();  // Open the database
+            String query = "SELECT id FROM User WHERE email = ?";
+            cursor = db.rawQuery(query, new String[]{email});
+
+            if (cursor.moveToFirst()) {
+                int idColumnIndex = cursor.getColumnIndex("id");
+
+                // Check if the column index is valid
+                if (idColumnIndex >= 0) {
+                    userId = cursor.getInt(idColumnIndex);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            // Close the cursor and the database only after all operations are complete
+            if (cursor != null) {
+                cursor.close();
+            }
+            if (db != null && db.isOpen()) {
+                db.close();
+            }
         }
-        cursor.close();
+
         return userId;
     }
+
+
     public void backupDatabase(Context context) {
         try {
             File currentDB = context.getDatabasePath(test);
@@ -377,21 +406,6 @@ public class dbConnect extends SQLiteOpenHelper {
             e.printStackTrace();
             System.err.println("Restore failed: " + e.getMessage());
         }
-    }
-    public static String getUniversityTableName() {
-        return UNIVERSITY_TABLE;
-    }
-    public static String getDepartamentTable() {
-        return DEPARTAMENT_TABLE;
-    }
-    public static String getUniversityID() {
-        return UID;
-    }
-    public static String getUniversityName() {
-        return UNAME;
-    }
-    public static String getDepartamentID() {
-        return DEPARTAMENTID;
     }
 
     public List<Article> getUserArticles(int userId) {

@@ -1,6 +1,7 @@
 package com.example.discussfirst;
 
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -11,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,6 +38,8 @@ public class ArticleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         dbHelper = new dbConnect(this);
         setContentView(R.layout.articles);
+
+        showWelcomeDialog();
 
         // Initialize RecyclerView
         recyclerView = findViewById(R.id.newsRecyclerView);
@@ -74,6 +78,18 @@ public class ArticleActivity extends AppCompatActivity {
     /**
      * Fetches articles from the database.
      */
+    private void showWelcomeDialog() {
+        new AlertDialog.Builder(ArticleActivity.this)
+                .setTitle("Mirë se vini")
+                .setMessage("Mirë se vini në UniConnect, ne faqen ku ju mund te postoni problemet e juaja!")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+    }
     private List<Article> getArticlesFromDatabase() {
         List<Article> articles = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();

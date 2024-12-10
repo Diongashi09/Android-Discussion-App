@@ -51,14 +51,11 @@ public class LogInPage extends AppCompatActivity {
             return insets;
         });
 
-        // Initialize database connection
         db = dbConnect.getInstance(this);
 
-        // Handle login button click
         btnLogIn.setOnClickListener(view -> validateFields());
     }
 
-    // Validate input fields
     private void validateFields() {
         String email = emailInpEditTxt.getText().toString();
         String password = passwordInpEditTxt.getText().toString();
@@ -67,7 +64,7 @@ public class LogInPage extends AppCompatActivity {
 
     }
 
-    // Handle user login
+
     private void loginUser(String email, String password) {
         try {
             // Check if user exists
