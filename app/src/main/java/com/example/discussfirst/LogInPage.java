@@ -22,7 +22,7 @@ public class LogInPage extends AppCompatActivity {
     private TextInputEditText passwordInpEditTxt;
     private Button btnGoToRegister;
     private Button btnLogIn;
-    private TextView registerNowTextView;
+    private TextView registerNowTextView, forgotPasswordTextView;
     private dbConnect db;
 
     @SuppressLint("MissingInflatedId")
@@ -37,11 +37,18 @@ public class LogInPage extends AppCompatActivity {
         passwordInpEditTxt = findViewById(R.id.PasswordInputL);
         btnLogIn = findViewById(R.id.btnLoginL);
         registerNowTextView = findViewById(R.id.txtGoRegister);
+        forgotPasswordTextView = findViewById(R.id.textView6); // Referenca për "Forgot password?"
 
         // Set click listener for registration page
         registerNowTextView.setOnClickListener(view -> {
             Intent i = new Intent(LogInPage.this, RegisterPage.class);
             startActivity(i);
+        });
+
+        // Set click listener for Forgot Password
+        forgotPasswordTextView.setOnClickListener(view -> {
+            Intent intent = new Intent(LogInPage.this, ForgotPassword.class);
+            startActivity(intent);
         });
 
         // Apply system bar insets for edge-to-edge support
@@ -61,58 +68,42 @@ public class LogInPage extends AppCompatActivity {
         String password = passwordInpEditTxt.getText().toString();
 
         loginUser(email, password);
-
     }
-
 
     private void loginUser(String email, String password) {
         try {
-            // Check if user exists
             boolean userExists = db.checkUser(email, password);
 
             if (userExists) {
-                // Assuming db.getUserId() returns the userId from the database
                 Log.d("IS_EXIST", "User exists: ");
                 int userId = db.getUserId(email);
 
-                // Save userId in SharedPreferences
                 SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
                 SharedPreferences.Editor editor = prefs.edit();
-                editor.putInt("USER_ID", userId);  // Save the userId
-
+                editor.putInt("USER_ID", userId);
                 editor.apply();
 
-                // Show success dialog
                 new AlertDialog.Builder(this)
                         .setTitle("Success")
                         .setMessage("Login successful!")
-                        .setPositiveButton("OK", (dialog, which) -> {
-                            dialog.dismiss();
-                        })
+                        .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
                         .setCancelable(false)
                         .show();
 
-                // Transition to ArticleActivity after successful login
                 Intent i = new Intent(LogInPage.this, EmailVerification.class);
                 i.putExtra("USER_EMAIL", email);
                 startActivity(i);
-                finish(); // Optional: To prevent going back to LogInPage after navigating
             } else {
-                // Show error dialog if user not found
                 new AlertDialog.Builder(this)
                         .setTitle("Error")
                         .setMessage("Please check your email or password!")
-                        .setPositiveButton("OK", (dialog, which) -> {
-                            dialog.dismiss();
-                        })
+                        .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
                         .setCancelable(false)
                         .show();
             }
 
-            // Close database connection
             db.close();
         } catch (Exception e) {
-            // Log any exceptions
             Log.e("LoginError", "Error while checking user", e);
         }
     }

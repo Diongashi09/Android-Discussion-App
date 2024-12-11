@@ -32,8 +32,18 @@ public class EmailVerification extends AppCompatActivity {
         emailInput = findViewById(R.id.emailInput);
         sendButton = findViewById(R.id.sendButton);
 
+        // Vendos automatikisht emailin nga aktiviteti i mëparshëm
+        String emailFromLogin = getIntent().getStringExtra("USER_EMAIL");
+        if (emailFromLogin != null && !emailFromLogin.isEmpty()) {
+            emailInput.setText(emailFromLogin); // Vendos emailin e marrë
+            emailInput.setFocusable(false); // E bën readonly
+            emailInput.setClickable(false);
+        } else {
+            emailInput.setText(""); // Nëse nuk ka email, vendos bosh
+        }
+
         sendButton.setOnClickListener(v -> {
-            String email = emailInput.getText().toString().trim(); // Already retrieved from login
+            String email = emailInput.getText().toString().trim(); // Merret nga EditText
             String code = generateVerificationCode();
             sentCode = code;
             sendEmail(email, code);
@@ -80,9 +90,9 @@ public class EmailVerification extends AppCompatActivity {
                     startActivity(intent);
                 });
             } catch (Exception e) {
-                Log.e("EmailVerification", "Dërgimi i emailit dështoi", e);
+                Log.e("EmailVerification", "Dërëgimi i emailit dështoi", e);
                 runOnUiThread(() -> {
-                    Toast.makeText(EmailVerification.this, "Dërgimi i emailit dështoi: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(EmailVerification.this, "Dërëgimi i emailit dështoi: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 });
             }
         }).start();

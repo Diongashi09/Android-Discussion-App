@@ -2,6 +2,7 @@ package com.example.discussfirst;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -50,11 +51,14 @@ public class CodeVerificationActivity extends AppCompatActivity {
                 // If verification is successful
                 Toast.makeText(CodeVerificationActivity.this, "Kodi u verifikua me sukses!", Toast.LENGTH_SHORT).show();
 
+                // Log for debugging
+                Log.d("CodeVerification", "Kodi i saktë, duke kaluar te ProfilePage");
+
                 // Transition to ProfilePage with the email
                 Intent intent = new Intent(CodeVerificationActivity.this, ProfilePage.class);
                 intent.putExtra("USER_EMAIL", emailFromPrevious); // Pass the email
-                startActivity(intent); // Start the activity
-                finish();
+                startActivity(intent);
+                finish(); // Close the current activity
             } else {
                 // If verification fails
                 Toast.makeText(CodeVerificationActivity.this, "Kodi i pasaktë i verifikimit", Toast.LENGTH_SHORT).show();
