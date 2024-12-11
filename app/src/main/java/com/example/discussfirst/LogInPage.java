@@ -47,9 +47,11 @@ public class LogInPage extends AppCompatActivity {
 
         // Set click listener for Forgot Password
         forgotPasswordTextView.setOnClickListener(view -> {
+            Log.d("ForgotPassword", "Navigating to ForgotPassword activity");
             Intent intent = new Intent(LogInPage.this, ForgotPassword.class);
             startActivity(intent);
         });
+
 
         // Apply system bar insets for edge-to-edge support
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
