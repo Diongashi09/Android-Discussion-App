@@ -21,7 +21,7 @@ public class ForgotVerificationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_code_verification);
+        setContentView(R.layout.activity_forgot_verification);
 
         // Retrieve the email passed from the previous activity
         String emailFromPrevious = getIntent().getStringExtra("USER_EMAIL");
