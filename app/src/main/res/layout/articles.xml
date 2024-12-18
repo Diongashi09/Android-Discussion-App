@@ -1,0 +1,105 @@
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <!-- Add Article Button -->
+    <Button
+        android:id="@+id/addArticleButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Article"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_margin="8dp" />
+
+    <!-- Profile Button -->
+    <Button
+        android:id="@+id/profileButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Profile"
+        app:layout_constraintTop_toTopOf="@id/addArticleButton"
+        app:layout_constraintStart_toEndOf="@id/addArticleButton"
+        android:layout_marginStart="8dp" />
+
+    <!-- RecyclerView for displaying articles -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/newsRecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scrollbars="vertical"
+        app:layout_constraintTop_toBottomOf="@id/profileButton"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:clipToPadding="false" />
+
+    <!-- Modal Form -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/modalForm"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:background="@android:color/white"
+        android:elevation="8dp">
+
+        <!-- Title Input -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/modalTitleInputLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:hint="Article Title"
+            android:padding="16dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/modalTitleEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Content Input -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/modalContentInputLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/modalTitleInputLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:hint="Article Content"
+            android:padding="16dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/modalContentEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Save Button -->
+        <Button
+            android:id="@+id/saveButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save"
+            app:layout_constraintTop_toBottomOf="@id/modalContentInputLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_margin="16dp" />
+
+        <!-- Cancel Button -->
+        <Button
+            android:id="@+id/cancelButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancel"
+            app:layout_constraintTop_toBottomOf="@id/modalContentInputLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_margin="16dp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

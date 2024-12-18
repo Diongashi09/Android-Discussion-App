@@ -1,5 +1,7 @@
 package com.example.discussfirst;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +16,11 @@ import java.util.List;
 public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleViewHolder> {
 
     private List<Article> articleList;
-
-    //sdsdsd
     private OnArticleDeleteListener deleteListener;
+    private Context context; // Shto Context
 
-    public ArticleAdapter(List<Article> articleList, OnArticleDeleteListener deleteListener) {
+    public ArticleAdapter(Context context, List<Article> articleList, OnArticleDeleteListener deleteListener) {
+        this.context = context; // Ruaj kontekstin
         this.articleList = articleList;
         this.deleteListener = deleteListener;
     }
@@ -38,10 +40,18 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleV
         holder.category.setText(article.getCategory());
         holder.preview.setText(article.getPreviewContent());
 
+        // Funksionaliteti i butonit Delete
         holder.deleteButton.setOnClickListener(v -> {
-            if(deleteListener != null){
-                deleteListener.onDelete(article,position);
+            if (deleteListener != null) {
+                deleteListener.onDelete(article, position);
             }
+        });
+
+        // Klikim për të hapur ProfileActivity
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, ProfilePage.class);
+            intent.putExtra("articleId", article.getId()); // Opsionale: dërgo ID-në e artikullit
+            context.startActivity(intent);
         });
     }
 
@@ -50,7 +60,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleV
         return articleList.size();
     }
 
-    public void removeItem(int position){
+    public void removeItem(int position) {
         articleList.remove(position);
         notifyItemRemoved(position);
     }
@@ -69,7 +79,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleV
         }
     }
 
-    // Interface for delete callback
+    // Interface për callback të delete
     public interface OnArticleDeleteListener {
         void onDelete(Article article, int position);
     }
