@@ -6,6 +6,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -366,4 +367,20 @@ public class dbConnect extends SQLiteOpenHelper {
         return articles;
     }
 
+    public void deleteArticle(int articleId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        try {
+            db.execSQL("PRAGMA foreign_keys=ON;"); // Enable foreign key constraints
+            int rowsAffected = db.delete(ARTICLES_TABLE, ID + " = ?", new String[]{String.valueOf(articleId)});
+            if (rowsAffected > 0) {
+                Log.d("DB_LOG", "Article with ID " + articleId + " deleted successfully.");
+            } else {
+                Log.w("DB_LOG", "No article found with ID " + articleId);
+            }
+        } catch (Exception e) {
+            Log.e("DB_LOG", "Error deleting article with ID " + articleId, e);
+        } finally {
+            db.close();
+        }
+    }
 }
