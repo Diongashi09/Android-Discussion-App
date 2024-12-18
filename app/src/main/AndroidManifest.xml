@@ -24,13 +24,7 @@
         android:theme="@style/Theme.DiscussFirst"
         tools:targetApi="31">
         <activity
-            android:name=".newpassword"
-            android:exported="false" />
-        <activity
-            android:name=".ForgotVerificationActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ForgotPassword"
+            android:name=".EditProfile"
             android:exported="false" />
         <activity
             android:name=".CodeVerificationActivity"
@@ -60,15 +54,8 @@
             android:name=".LogInPage"
             android:exported="false" />
         <activity
-            android:name=".ArticleActivity"
-            android:exported="true"/>
-        <activity
-            android:name=".ArticleDetailActivity"
-            android:exported="true"/>
-        <activity
             android:name=".MainActivity"
             android:exported="true">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
